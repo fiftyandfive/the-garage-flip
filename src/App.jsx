@@ -38,42 +38,49 @@ const FORMSPREE_ID = "xkokwnov";
 
 // ─── SERVICES DATA ───
 const SERVICES = [
-  { id: "cleanout", icon: "\u{1F9F9}", title: "Garage Cleanout", desc: "Full removal of clutter, junk, and unwanted items. We handle the hauling so you don't have to.", price: 600 },
-  { id: "organization", icon: "\u{1F3D7}\uFE0F", title: "Garage Organization", desc: "Custom sorting, shelving installation, and layout optimization for a space that actually works.", price: 400 },
-  { id: "epoxy", icon: "\u{1F48E}", title: "Epoxy Floor Coating", desc: "Durable, showroom-quality epoxy floors that transform the look and feel of any garage.", price: 1500 },
-  { id: "cabinets", icon: "\u{1F5C4}\uFE0F", title: "Cabinet Installation", desc: "Custom garage cabinetry for tools, gear, and storage — built to last.", price: 2000 },
-  { id: "overhead", icon: "\u{1F4E6}", title: "Overhead Storage Racks", desc: "Maximize vertical space with heavy-duty overhead storage systems.", price: 400 },
-  { id: "pressure", icon: "\u{1F6BF}", title: "Pressure Washing", desc: "Deep clean your garage floor, driveway, and exterior surfaces.", price: 200 },
-  { id: "ev", icon: "\u26A1", title: "EV Charger Installation", desc: "Level 2 EV charger installation by licensed electricians. Future-proof your garage.", price: 800 },
-  { id: "ac", icon: "\u2744\uFE0F", title: "Mini-Split AC/Heat", desc: "Keep your garage comfortable year-round with an efficient mini-split system.", price: 1500 },
-  { id: "shelving", icon: "\u{1F527}", title: "Custom Shelving & Workbenches", desc: "Built-to-order shelving and workbench solutions for the serious hobbyist or professional.", price: 500 },
-  { id: "pest", icon: "\u{1F41B}", title: "Pest Treatment", desc: "Garage-specific pest and rodent treatment before or after your cleanout.", price: 150 },
+  { id: "cleanout", icon: "\u{1F9F9}", title: "Garage Cleanout", desc: "We haul out the junk, the clutter, the 10 years of 'I'll deal with it later.' You get your space back.", price: 500 },
+  { id: "organization", icon: "\u{1F4CB}", title: "Organization & Sorting", desc: "Everything gets a home. Tools, holiday decor, sports gear — sorted, labeled, and easy to find.", price: 400 },
+  { id: "flooring", icon: "\u{1F48E}", title: "Premium Flooring", desc: "The floor upgrade that makes your neighbor ask who did your garage. Clean, polished, built to last.", price: 1500 },
+  { id: "storage", icon: "\u{1F4E6}", title: "Smart Storage Systems", desc: "Overhead racks, wall-mounted systems, and shelving that turns dead space into usable square footage.", price: 400 },
+  { id: "shelving", icon: "\u{1F527}", title: "Shelving & Workbenches", desc: "Built-to-order setups for the weekend warrior, hobbyist, or anyone who needs a real workspace.", price: 500 },
+  { id: "pressure", icon: "\u{1F6BF}", title: "Pressure Washing", desc: "Deep clean your garage floor, driveway, and exterior. The first thing guests see — make it count.", price: 200 },
+  { id: "ev", icon: "\u26A1", title: "EV Charger Install", desc: "Level 2 charger installed by licensed electricians. Pull in, plug in, wake up fully charged.", price: 800 },
+  { id: "ac", icon: "\u2744\uFE0F", title: "Climate Control", desc: "Mini-split AC and heat so your garage is comfortable year-round. Your new favorite room in the house.", price: 1500 },
+  { id: "lighting", icon: "\u{1F4A1}", title: "LED Lighting Upgrade", desc: "Bright, clean lighting that makes the whole space feel finished. No more working in the dark.", price: 300 },
+  { id: "pest", icon: "\u{1F41B}", title: "Pest Treatment", desc: "Garage-specific pest and rodent treatment. Clear it out before you build it up.", price: 150 },
 ];
 
-// ─── PACKAGES DATA ───
+// ─── PACKAGES DATA (4-TIER OFFER LADDER) ───
 const PACKAGES = [
   {
     name: "The Reset",
-    range: "$800 – $1,200",
-    tagline: "Start fresh.",
-    services: ["cleanout"],
-    features: ["Full garage cleanout", "Junk hauling & disposal", "Basic sweep & cleanup", "Same-week scheduling"],
+    range: "$500 – $1,500",
+    tagline: "The cleanest garage on your street.",
+    services: ["cleanout", "organization"],
+    features: ["Full garage cleanout & junk hauling", "Organization & sorting", "Pressure wash & sweep", "Same-week scheduling"],
   },
   {
-    name: "The Refresh",
-    range: "$2,500 – $4,500",
-    tagline: "The most popular transformation.",
+    name: "The Upgrade",
+    range: "$2,000 – $6,000",
+    tagline: "Your house just became the hangout spot.",
     popular: true,
-    services: ["cleanout", "epoxy", "shelving"],
-    features: ["Everything in The Reset", "Epoxy floor coating", "Custom shelving install", "Before/after documentation", "Organization consultation"],
+    services: ["cleanout", "organization", "flooring", "storage"],
+    features: ["Everything in The Reset", "Premium flooring install", "Smart storage systems", "Shelving & workbench setup", "Before/after documentation"],
   },
   {
-    name: "The Retreat",
-    range: "$6,000 – $12,000",
-    tagline: "The full transformation.",
-    services: ["cleanout", "epoxy", "cabinets", "ac"],
-    features: ["Everything in The Refresh", "Custom cabinet installation", "Mini-split AC/heat", "Lighting upgrade consultation", "Dedicated project manager"],
+    name: "The Full Flip",
+    range: "$7,000 – $20,000+",
+    tagline: "Your wife stops complaining about the clutter.",
+    services: ["cleanout", "organization", "flooring", "storage", "ac", "lighting"],
+    features: ["Everything in The Upgrade", "Climate control (AC/heat)", "LED lighting upgrade", "EV charger ready", "Custom layout design", "Dedicated project manager"],
   },
+];
+
+// ─── RECURRING / MAINTENANCE ADD-ONS ───
+const RECURRING_FEATURES = [
+  { title: "Seasonal Re-Org", desc: "Quarterly garage tune-up. Swap seasonal gear, re-sort, keep it dialed.", price: "$149/quarter" },
+  { title: "Monthly Maintenance", desc: "Monthly cleaning, pest check, and touch-ups. Your garage stays showroom-ready.", price: "$99/month" },
+  { title: "Add-On Projects", desc: "Gym setup, workshop build-out, lighting upgrades, holiday storage systems — whatever's next.", price: "Custom quote" },
 ];
 
 // ─── SMOOTH SCROLL ───
@@ -394,10 +401,10 @@ function ServicesSection() {
           <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 64px" }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Services</span>
             <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-              Cleanouts. Junk removal.<br />And everything after.
+              Everything between "I can't park in here"<br />and "come check out my garage."
             </h2>
             <p style={{ fontSize: 17, color: C.textMuted, lineHeight: 1.7 }}>
-              Start with a cleanout — then upgrade to a full transformation if you want. No pressure, just options.
+              Start with a cleanout. Upgrade to a full transformation when you're ready. No pressure — just options that actually get used.
             </p>
           </div>
         </FadeIn>
@@ -440,10 +447,10 @@ function PackagesSection({ onSelectPackage }) {
           <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 64px" }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Packages</span>
             <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: "#fff", margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-              Transformation packages.
+              Pick your level of transformation.
             </h2>
             <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>
-              Pick a package or build your own custom quote below.
+              Most people start with a cleanout. The smart ones come back for the full flip.
             </p>
           </div>
         </FadeIn>
@@ -504,6 +511,61 @@ function PackagesSection({ onSelectPackage }) {
             </FadeIn>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── RECURRING / KEEP IT CLEAN ───
+function RecurringSection() {
+  return (
+    <section style={{ padding: "80px 32px 100px", background: C.bgDarker }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 48px" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Keep It Clean</span>
+            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 40px)", fontWeight: 800, color: "#fff", margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Don't let it slide back to chaos.
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>
+              We didn't transform your garage just for it to become a storage unit again. Stay on top of it.
+            </p>
+          </div>
+        </FadeIn>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          {RECURRING_FEATURES.map((item, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <div style={{
+                ...glass.cardDark,
+                borderRadius: 16, padding: 28, height: "100%",
+                display: "flex", flexDirection: "column",
+                transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(232,93,4,0.3)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                <h3 style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 8 }}>{item.title}</h3>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, flex: 1, marginBottom: 16 }}>{item.desc}</p>
+                <div style={{ fontSize: 18, fontWeight: 800, color: C.accent }}>{item.price}</div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+
+        <FadeIn delay={0.3}>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <button onClick={() => scrollTo("quote")} style={{
+              padding: "16px 36px", borderRadius: 12, border: "none", cursor: "pointer",
+              background: C.accent, color: "#fff", fontWeight: 700, fontSize: 15,
+              transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+              ...glass.glow(C.accent),
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.accentHover; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.accent; e.currentTarget.style.transform = "translateY(0)"; }}
+            >Ask About Maintenance Plans</button>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
@@ -755,9 +817,9 @@ function QuoteBuilder({ selectedServices, setSelectedServices }) {
 // ─── WHY THE GARAGE FLIP ───
 function WhySection() {
   const items = [
-    { icon: <Trophy size={32} />, title: "Premium Service", desc: "We're not a junk hauler. We're a transformation team." },
-    { icon: <Zap size={32} />, title: "Fast & Reliable", desc: "Most jobs completed in a single day." },
-    { icon: <Handshake size={32} />, title: "One Call Does It All", desc: "Cleanout to full renovation — one company, one call." },
+    { icon: <Trophy size={32} />, title: "The Cleanest Garage on Your Street", desc: "Your neighbors will ask what happened. That's the whole point." },
+    { icon: <Zap size={32} />, title: "Done in Days, Not Weeks", desc: "Most cleanouts done same week. Full transformations in under 5 days." },
+    { icon: <Handshake size={32} />, title: "One Call. Everything Handled.", desc: "Cleanout, upgrade, maintenance — one team, one number, zero headaches." },
   ];
 
   return (
@@ -799,31 +861,31 @@ function WhySection() {
 const FAQ_DATA = [
   {
     q: "How much does a garage cleanout cost in Orlando?",
-    a: "A professional garage cleanout in Orlando starts at $600 for a standard two-car garage. This includes full junk removal, hauling, disposal, and a clean sweep. Larger garages or heavy hoarding situations may cost $800–$1,200. We offer free estimates with same-week scheduling."
+    a: "Our Reset package starts at $500 for a full garage cleanout — that includes junk removal, hauling, disposal, organization, and a clean sweep. Larger garages or heavy situations may run $1,000–$1,500. Free estimates with same-week scheduling."
   },
   {
-    q: "How long does an epoxy garage floor installation take?",
-    a: "Most residential epoxy garage floor installations take 1–2 days. This includes surface prep, primer application, epoxy coating, and curing time. We use commercial-grade epoxy that lasts 15–20 years with proper care. Starting at $1,500 for a standard two-car garage."
+    q: "Can I just get a cleanout without a full transformation?",
+    a: "Absolutely. Most people start with The Reset ($500–$1,500) — just a cleanout and organization. No upsell pressure. If you want to upgrade to flooring, storage, or a full flip later, we're here. But a clean garage is a great garage."
   },
   {
-    q: "Do you install EV chargers in Orlando garages?",
-    a: "Yes — we provide Level 2 EV charger installation by licensed electricians starting at $800. We handle permitting, panel upgrades if needed, and full installation. We serve Orlando, Winter Park, Windermere, Lake Nona, Dr. Phillips, and surrounding areas."
+    q: "How long does a full garage transformation take?",
+    a: "Cleanouts are usually same-week, often same-day. Partial upgrades (The Upgrade tier) take 2–3 days. A Full Flip with climate control, flooring, lighting, and storage runs about 3–5 days depending on the scope."
   },
   {
     q: "What areas do you serve near Orlando?",
-    a: "We serve the greater Orlando metro area including Winter Park, Windermere, Lake Nona, Dr. Phillips, College Park, Baldwin Park, Celebration, and surrounding communities."
+    a: "We serve the greater Orlando metro including Winter Park, Windermere, Lake Nona, Dr. Phillips, College Park, Baldwin Park, Celebration, Lake Mary, Horizon West, and surrounding communities."
   },
   {
-    q: "Can I just get a garage cleanout without other services?",
-    a: "Absolutely. Our most popular starting point is The Reset package ($800–$1,200) which includes a full garage cleanout with junk hauling and disposal. Many customers start with a cleanout and later upgrade to organization, epoxy floors, or cabinets — but there's zero pressure to add anything."
+    q: "Do you install EV chargers?",
+    a: "Yes — Level 2 EV charger installation by licensed electricians starting at $800. We handle permitting, panel upgrades if needed, and full installation. It's a popular add-on to any package."
   },
   {
-    q: "How much does garage organization cost in Orlando?",
-    a: "Professional garage organization starts at $400 for custom sorting, shelving installation, and layout optimization. Our most popular package (The Refresh at $2,500–$4,500) includes cleanout plus epoxy flooring and custom shelving for a complete garage makeover."
+    q: "Do you offer maintenance plans?",
+    a: "Yes. After your transformation, we offer quarterly seasonal re-orgs ($149/quarter) and monthly maintenance plans ($99/month) so your garage stays dialed. We also do add-on projects like gym setups, workshop builds, and lighting upgrades."
   },
   {
-    q: "Do you offer financing for garage transformations?",
-    a: "Contact us directly to discuss payment options for larger transformation projects. Our packages range from $800 for a basic cleanout to $12,000 for a full garage retreat with cabinets, epoxy, AC, and more."
+    q: "What's included in The Full Flip?",
+    a: "Everything — cleanout, organization, premium flooring, smart storage systems, climate control, LED lighting, EV charger prep, custom layout design, and a dedicated project manager. Starts at $7,000 and goes up based on your vision. This is the one that makes your neighbors jealous."
   },
 ];
 
@@ -1088,6 +1150,183 @@ function StickyMobileCTA() {
   );
 }
 
+// ─── BLOG / GARAGE TALK ───
+const BLOG_POSTS = [
+  {
+    slug: "garage-cleanout-cost-orlando",
+    title: "How Much Does a Garage Cleanout Actually Cost in Orlando? (2026 Guide)",
+    category: "Pricing",
+    readTime: "4 min",
+    excerpt: "If you've Googled 'garage cleanout cost Orlando' you've probably seen everything from $200 to $2,000. Here's what actually determines the price — and why most estimates you see online are wrong.",
+    body: `Most Orlando homeowners pay between $500 and $1,500 for a professional garage cleanout. The price depends on three things: how much stuff is in there, how heavy it is, and how fast you want it done.\n\nA standard two-car garage with moderate clutter runs about $500–$800. If you're dealing with years of accumulation, heavy furniture, or appliances, expect $1,000–$1,500. Hoarding situations can go higher.\n\nWhat's included at The Garage Flip: full junk removal, hauling to donation centers or disposal, sorting and organization of what stays, pressure wash of the floor, and a final sweep. Same-week scheduling is standard — most cleanouts are done within 48 hours of booking.\n\nDIY vs. pro? A dumpster rental alone costs $300–$500. Add a full weekend of your time, dump fees, and the truck rentals — you're at $600+ and exhausted. We do it in a day while you go to brunch.\n\nBottom line: if you can't park in your garage, $500 to get it back is one of the best ROI home projects in Orlando.`,
+  },
+  {
+    slug: "winter-park-garage-transformation",
+    title: "Winter Park Garage Transformations: What Homeowners on Park Avenue Are Doing",
+    category: "Winter Park",
+    readTime: "3 min",
+    excerpt: "Winter Park homeowners are turning cluttered garages into showpieces. Here's what the smartest upgrades look like in the 32789 — and why your garage might be the most undervalued room in your house.",
+    body: `Winter Park homes have character. Brick streets, mature oaks, architecture that actually means something. But behind those beautiful front doors? A garage full of stuff that hasn't been touched since 2019.\n\nWe're seeing a wave of Winter Park homeowners — especially in the Via Tuscany, Palmer Avenue, and Genius Drive corridors — investing in their garages. Not just cleanouts. Full transformations.\n\nThe most popular package in Winter Park is The Upgrade ($2,000–$6,000). That gets you a cleanout, premium flooring, smart storage systems, and custom shelving. The result? A garage that matches the rest of your home.\n\nFor larger estates, The Full Flip ($7,000–$20,000+) adds climate control, LED lighting, and EV charger prep. Several homeowners near Rollins College have turned their garages into hybrid workshop/gym spaces.\n\nWinter Park real estate averages $550K+. Your garage is 400–600 sq ft of space that's currently being used as a junk drawer. At $10–$15/sq ft for a full transformation, this is the most underpriced upgrade in your home.`,
+  },
+  {
+    slug: "windermere-luxury-garage",
+    title: "Windermere's Luxury Garage Problem (And How to Fix It in 5 Days)",
+    category: "Windermere",
+    readTime: "3 min",
+    excerpt: "You live in a million-dollar home with a $0 garage. Isleworth, Keene's Pointe, and Lakeside families are finally fixing the one room they've been ignoring.",
+    body: `Windermere has some of the most beautiful homes in Central Florida. Isleworth. Keene's Pointe. Lake Butler Sound. Homes that sell for $1M–$10M+.\n\nAnd almost every single one has a garage that looks like a storage unit.\n\nHere's the thing: Windermere garages are BIG. 3-car and 4-car setups are standard. That's 800–1,200 sq ft of prime real estate being used to store pool noodles and boxes from 2017.\n\nThe Full Flip is the most popular package in Windermere. At $7,000–$20,000+, it includes cleanout, premium flooring, smart storage, climate control, and LED lighting. We've built workshop spaces, home gyms, golf simulator bays, and even music studios inside Windermere garages.\n\nTimeline: 3–5 days from start to finish. We handle everything — you just tell us what you want the space to become.\n\nIf your home is worth $1M+ and your garage looks like it belongs in a different zip code, that's the gap we close.`,
+  },
+  {
+    slug: "lake-nona-ev-charger-garage",
+    title: "Lake Nona Homeowners: Your Garage Should Be as Smart as Your House",
+    category: "Lake Nona",
+    readTime: "3 min",
+    excerpt: "Lake Nona is built for the future. Smart homes, medical city, Innovation District. But most garages in 32827 are stuck in 2015. Here's the fix.",
+    body: `Lake Nona is Orlando's most forward-thinking community. Medical City. Innovation District. Smart homes with automation built in.\n\nSo why does your garage still look like a scene from Storage Wars?\n\nLake Nona homeowners are the biggest adopters of our EV charger installation add-on. Tesla, Rivian, BMW — the EV density in 32827 is some of the highest in Central Florida. A Level 2 charger install starts at $800 and takes half a day.\n\nBut the real move is pairing it with a full garage upgrade. Climate control matters in Florida — a mini-split AC keeps your garage at 72° year-round, which is better for your car, your tools, and your sanity.\n\nThe Upgrade package ($2,000–$6,000) is the sweet spot for most Lake Nona homes: cleanout, premium flooring, storage systems, and optional EV charger. Modern home, modern garage.\n\nLake Nona homes average $500K–$800K. A $3,000–$5,000 garage upgrade adds real resale value and daily quality of life. That's a no-brainer.`,
+  },
+  {
+    slug: "best-garage-upgrades-orlando-2026",
+    title: "The 5 Garage Upgrades Orlando Homeowners Are Actually Doing in 2026",
+    category: "Trends",
+    readTime: "4 min",
+    excerpt: "Forget the Pinterest fantasy. These are the upgrades real Orlando homeowners are paying for right now — ranked by ROI and satisfaction.",
+    body: `We've done hundreds of garage consultations across Orlando. Here are the five upgrades people actually pull the trigger on — and why.\n\n1. THE CLEANOUT (Starting at $500)\nThis is where 80% of customers start. Just getting the junk out and the space organized changes everything. Most people don't even know what they have in their garage until we sort it.\n\n2. PREMIUM FLOORING (Starting at $1,500)\nThe single biggest visual transformation. Takes 1–2 days. Lasts 15–20 years. Every single customer who gets flooring says the same thing: "I should have done this years ago."\n\n3. SMART STORAGE SYSTEMS (Starting at $400)\nOverhead racks and wall-mounted systems. The floor stays clear, everything has a place. This is the upgrade that makes your spouse happy.\n\n4. CLIMATE CONTROL (Starting at $1,500)\nMini-split AC/heat. In Florida, this turns your garage from an oven into an actual usable room. The customers who add this spend 10x more time in their garage.\n\n5. LED LIGHTING (Starting at $300)\nThe most underrated upgrade. Bright, clean lighting makes the whole space feel finished and professional. It's the difference between "garage" and "room."\n\nBest ROI? The cleanout + flooring combo at $2,000–$3,000 total. It's the sweet spot between cost and transformation.`,
+  },
+  {
+    slug: "dr-phillips-garage-makeover",
+    title: "Dr. Phillips Garage Makeovers: Bay Hill to Sand Lake",
+    category: "Dr. Phillips",
+    readTime: "3 min",
+    excerpt: "Dr. Phillips homeowners are sitting on some of the nicest houses in Orlando — with garages that don't match. Here's what the upgrade looks like from Bay Hill to Restaurant Row.",
+    body: `Dr. Phillips is one of Orlando's best-kept secrets for quality of life. Great schools, Restaurant Row, Bay Hill — the neighborhood has everything.\n\nExcept clean garages, apparently.\n\nWe serve the entire Dr. Phillips corridor from Bay Hill estates through the Sand Lake area. The most common request? "I just want to be able to park my car in my garage again."\n\nThat's The Reset ($500–$1,500). A full cleanout with organization. Done in a day.\n\nBut Dr. Phillips homeowners who've seen what a full transformation looks like usually upgrade. The area's average home value is $450K–$700K, and a $3,000–$6,000 garage upgrade is one of the highest-ROI improvements you can make.\n\nPopular add-ons in Dr. Phillips: premium flooring (the Florida humidity means coated floors last longer), smart storage (these homes have deep 2-car garages with tons of vertical space), and EV charger installs.\n\nIf you're in 32819 and your garage needs work, you're in our core service area. Same-week scheduling, free estimates.`,
+  },
+  // ─── SERVICE-SPECIFIC ARTICLES ───
+  {
+    slug: "garage-cleanout-what-to-expect",
+    title: "What Actually Happens During a Professional Garage Cleanout",
+    category: "Cleanout",
+    readTime: "3 min",
+    excerpt: "You call, we show up, and three hours later you can see your garage floor. Here's exactly what the process looks like — no surprises.",
+    body: `Step 1: We walk the garage together. You point at what stays and what goes. Takes 10 minutes.\n\nStep 2: Our crew sorts everything into keep, donate, and dispose piles. We're fast — most two-car garages are fully sorted in under two hours.\n\nStep 3: Junk gets loaded and hauled. Anything in good condition goes to local donation centers. The rest goes to proper disposal. You don't lift a finger.\n\nStep 4: We sweep and pressure wash the floor if it's part of your package. The stuff that stays gets organized and put back in a way that actually makes sense.\n\nStep 5: You walk into your garage and wonder why you didn't do this three years ago.\n\nTotal time: 3–6 hours depending on size and clutter level. Cost: $500–$1,500. Most cleanouts are scheduled within the same week you call.\n\nThe number one thing people say after a cleanout: "I had no idea my garage was this big."`,
+  },
+  {
+    slug: "garage-organization-systems-orlando",
+    title: "Garage Organization That Actually Sticks (Not the Pinterest Version)",
+    category: "Organization",
+    readTime: "3 min",
+    excerpt: "The difference between 'organized for the Instagram photo' and 'organized for real life' is a system. Here's how we build ones that last.",
+    body: `Most garage organization fails within 6 months. Here's why: it's designed for how the garage looks, not how you actually use it.\n\nOur approach is different. We start with three questions: What do you use weekly? What's seasonal? What haven't you touched in a year?\n\nWeekly items go at grab-and-go height. Seasonal gear goes overhead or high shelving. And the stuff you haven't touched? Probably time to donate it.\n\nThe system: wall-mounted tool organizers for the things you reach for every week. Overhead storage racks for holiday decorations, camping gear, and seasonal items. Clear bins with labels so you can find the Christmas lights in December without a search party.\n\nFor families: dedicated zones. Kids' sports gear in one area. Tools in another. Beach and pool stuff easy to grab on the way out.\n\nOur organization service starts at $400 and usually pairs with a cleanout ($500+). The combo is $800–$1,200 and honestly it's the best value on the menu.\n\nPro tip: if your garage has been a mess for more than a year, skip the DIY weekend and call us. We've organized hundreds of garages — we know the shortcuts.`,
+  },
+  {
+    slug: "garage-flooring-options-orlando",
+    title: "Garage Flooring in Orlando: Which Option Actually Survives Florida?",
+    category: "Flooring",
+    readTime: "4 min",
+    excerpt: "Florida humidity destroys cheap garage floors. Here's what works, what doesn't, and why your neighbor's peeling floor was a predictable mistake.",
+    body: `Orlando's climate is brutal on garage floors. 90% humidity, 95° heat, constant moisture from rain-soaked cars pulling in. The wrong flooring fails in under two years.\n\nWhat doesn't work: peel-and-stick tiles (they peel), cheap one-coat epoxy (it yellows and chips), and rubber mats over cracked concrete (moisture gets trapped underneath).\n\nWhat works: polyurea and polyaspartic coatings. They cure faster than traditional epoxy (same-day vs. 3-day), they're UV-stable (no yellowing), and they handle Florida's temperature swings without cracking.\n\nOur premium flooring service starts at $1,500 for a standard two-car garage. That includes concrete prep (diamond grinding), crack and chip repair, moisture barrier primer, color flake broadcast, and a clear topcoat.\n\nInstall time: 1 day for prep, 1 day for coating. You can park on it within 24–48 hours.\n\nLifespan: 15–20 years with normal use. We've seen plenty of 10-year-old installations in Orlando that still look brand new.\n\nThe flooring upgrade is the single biggest visual transformation in a garage. It's the difference between "storage space" and "this is actually a nice room."`,
+  },
+  {
+    slug: "smart-storage-garage-systems",
+    title: "Smart Garage Storage: How to Get 50% More Space Without Adding Square Footage",
+    category: "Storage",
+    readTime: "3 min",
+    excerpt: "Your garage isn't too small. It's just using the wrong dimensions. Here's how overhead racks and wall systems unlock space you didn't know you had.",
+    body: `The average Orlando two-car garage has about 400 sq ft of floor space. But it also has 400 sq ft of ceiling space and 200+ sq ft of wall space that's completely unused.\n\nThat's where smart storage systems come in.\n\nOverhead storage racks mount to the ceiling joists and hold 500–600 lbs each. That's your holiday decorations, camping gear, luggage, and seasonal items — all off the floor and out of the way.\n\nWall-mounted systems (slatwall panels, track systems, and pegboard) put tools, bikes, sports equipment, and yard gear on the walls where you can see and grab them.\n\nThe result: your floor is clear for parking, your workbench is usable, and you can actually find things.\n\nOur smart storage systems start at $400 for a basic overhead rack setup. A full wall-and-ceiling system for a two-car garage runs $800–$1,500.\n\nBiggest unlock: combining storage with a cleanout. Customers who do both spend an average of $1,000 and gain back 50–60% of their usable floor space. That's 200+ sq ft of space that was buried under stuff.\n\nThe look on someone's face when they can park both cars in the garage for the first time in years — that's why we do this.`,
+  },
+  {
+    slug: "ev-charger-installation-orlando",
+    title: "EV Charger Installation in Orlando: The Complete Homeowner's Guide",
+    category: "EV Charging",
+    readTime: "4 min",
+    excerpt: "Level 1 vs Level 2, permitting, panel upgrades, and actual costs. Everything you need to know before installing an EV charger in your Orlando garage.",
+    body: `If you drive a Tesla, Rivian, BMW, or any EV in Orlando, you're probably tired of Supercharger lines. A home Level 2 charger changes everything — pull in, plug in, wake up at 100%.\n\nLevel 1 (standard outlet): charges 4–5 miles of range per hour. That's 40–50 miles overnight. Fine if you drive very little.\n\nLevel 2 (240V dedicated circuit): charges 25–30 miles of range per hour. That's a full charge overnight for any EV. This is what 90% of homeowners want.\n\nOur Level 2 installation starts at $800 and includes: the charger unit, a dedicated 240V 50-amp circuit, professional mounting, permitting with Orange County, and a final inspection.\n\nDo you need a panel upgrade? Maybe. Homes built after 2000 usually have 200-amp panels and can handle a charger no problem. Older homes with 100-amp panels may need an upgrade ($1,500–$2,500 additional). We assess this during the free estimate.\n\nInstall time: half a day for standard installations.\n\nPopular combo: EV charger + garage cleanout + flooring. If you're already upgrading the garage, adding the charger while we're there saves a separate service call.\n\nOrlando's EV adoption is growing fast, especially in Lake Nona, Windermere, and Winter Park. A home charger adds real resale value — buyers expect it now.`,
+  },
+  {
+    slug: "garage-climate-control-florida",
+    title: "Why Your Florida Garage Needs Climate Control (And What It Actually Costs)",
+    category: "Climate Control",
+    readTime: "3 min",
+    excerpt: "Your garage hits 120°F in July. Your tools are rusting, your paint cans are exploding, and you haven't used your workbench since March. Here's the fix.",
+    body: `In Orlando, an unconditioned garage reaches 110–130°F in summer. That's not just uncomfortable — it's destructive. Paint warps. Tools rust. Rubber degrades. Electronics overheat.\n\nA mini-split AC/heat system solves this completely. It's a wall-mounted unit that cools in summer and heats in winter (yes, those 40° January mornings exist). No ductwork needed.\n\nCost: starting at $1,500 installed for a single-zone mini-split that handles a standard two-car garage. Larger or insulated garages may need a higher BTU unit ($2,000–$3,000).\n\nEnergy cost: about $30–$50/month to run during peak summer if you're keeping the garage at 75°F. Most people set it to 78° and only run it when they're in the garage.\n\nThe ROI isn't just comfort. Climate control protects everything stored in your garage — that alone can save thousands in damaged goods. And it turns 400 sq ft of unusable hot space into the most versatile room in your house.\n\nCustomers who add climate control report spending 10x more time in their garage. Home gyms, workshops, music spaces, remote offices — all possible once the temperature is handled.\n\nBest paired with: premium flooring and LED lighting. The trifecta that turns a garage into a room.`,
+  },
+];
+
+function BlogPost({ post }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <article id={`blog-${post.slug}`} style={{
+      ...glass.card,
+      borderRadius: 16, overflow: "hidden",
+      transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
+    }}
+    onMouseEnter={e => { if (!expanded) { e.currentTarget.style.borderColor = "rgba(232,93,4,0.25)"; e.currentTarget.style.transform = "translateY(-3px)"; } }}
+    onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"; e.currentTarget.style.transform = "translateY(0)"; }}
+    >
+      <div style={{ padding: "28px 28px 20px" }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 12, alignItems: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, background: C.accentBg, padding: "4px 10px", borderRadius: 100, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+            {post.category}
+          </span>
+          <span style={{ fontSize: 12, color: C.textLight }}>{post.readTime} read</span>
+        </div>
+        <h3 style={{ fontSize: 19, fontWeight: 800, color: C.text, lineHeight: 1.35, marginBottom: 10 }}>{post.title}</h3>
+        <p style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.7, marginBottom: 16 }}>{post.excerpt}</p>
+
+        {expanded && (
+          <div style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.8, whiteSpace: "pre-line", marginBottom: 16, borderTop: `1px solid ${C.cardBorder}`, paddingTop: 20 }}>
+            {post.body}
+          </div>
+        )}
+
+        <button onClick={() => { setExpanded(!expanded); if (!expanded) window.history.replaceState(null, "", `#blog-${post.slug}`); }} style={{
+          background: "none", border: "none", cursor: "pointer",
+          color: C.accent, fontWeight: 700, fontSize: 14,
+          display: "flex", alignItems: "center", gap: 6, padding: 0,
+        }}>
+          {expanded ? "Read less" : "Read more"}
+          <ChevronDown size={16} style={{
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.3s",
+          }} />
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function BlogSection() {
+  return (
+    <section id="blog" style={{ padding: "100px 32px 120px", background: C.bg }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 56px" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Garage Talk</span>
+            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Tips, pricing, and neighborhood spotlights.
+            </h2>
+            <p style={{ fontSize: 17, color: C.textMuted, lineHeight: 1.7 }}>
+              Real talk about garage transformations in Orlando — what it costs, what to expect, and what your neighbors are doing.
+            </p>
+          </div>
+        </FadeIn>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
+          gap: 24,
+        }}>
+          {BLOG_POSTS.map((post, i) => (
+            <FadeIn key={post.slug} delay={i * 0.05}>
+              <BlogPost post={post} />
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── FOOTER ───
 function Footer() {
   return (
@@ -1103,8 +1342,8 @@ function Footer() {
 
           <div>
             <h4 style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 20 }}>Navigate</h4>
-            {["Services", "Packages", "Get a Quote", "FAQ", "Service Areas"].map(l => (
-              <div key={l} onClick={() => scrollTo(l === "Get a Quote" ? "quote" : l === "Service Areas" ? "areas" : l.toLowerCase())} style={{
+            {["Services", "Packages", "Get a Quote", "Garage Talk", "FAQ", "Service Areas"].map(l => (
+              <div key={l} onClick={() => scrollTo(l === "Get a Quote" ? "quote" : l === "Service Areas" ? "areas" : l === "Garage Talk" ? "blog" : l.toLowerCase())} style={{
                 cursor: "pointer", fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 12,
                 transition: "color 0.2s",
               }}
@@ -1173,10 +1412,12 @@ export default function App() {
       <Hero />
       <ServicesSection />
       <PackagesSection onSelectPackage={handleSelectPackage} />
+      <RecurringSection />
       <QuoteBuilder selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
       <WhySection />
       <GuaranteeSection />
       <FAQSection />
+      <BlogSection />
       <ServiceAreaSection />
       <StickyMobileCTA />
       <Footer />
