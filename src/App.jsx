@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { BrowserRouter, Routes, Route, useParams, Link } from "react-router-dom";
 import { Menu, X, Phone, Mail, MapPin, ArrowRight, Check, ChevronDown, Trophy, Zap, Handshake, Shield, Clock, Star, ChevronUp } from "lucide-react";
 
 // ─── COLOR PALETTE: "Premium Bold" ───
@@ -1252,19 +1253,19 @@ const BLOG_POSTS = [
   },
 ];
 
-function BlogPost({ post }) {
-  const [expanded, setExpanded] = useState(false);
-
+function BlogCard({ post }) {
   return (
-    <article id={`blog-${post.slug}`} style={{
+    <Link to={`/blog/${post.slug}`} style={{
       ...glass.card,
       borderRadius: 16, overflow: "hidden",
       transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
+      display: "flex", flexDirection: "column", height: "100%",
+      textDecoration: "none", color: "inherit", cursor: "pointer",
     }}
-    onMouseEnter={e => { if (!expanded) { e.currentTarget.style.borderColor = "rgba(232,93,4,0.25)"; e.currentTarget.style.transform = "translateY(-3px)"; } }}
+    onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(232,93,4,0.25)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
     onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"; e.currentTarget.style.transform = "translateY(0)"; }}
     >
-      <div style={{ padding: "28px 28px 20px" }}>
+      <div style={{ padding: "28px 28px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
         <div style={{ display: "flex", gap: 12, marginBottom: 12, alignItems: "center" }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, background: C.accentBg, padding: "4px 10px", borderRadius: 100, textTransform: "uppercase", letterSpacing: "0.5px" }}>
             {post.category}
@@ -1272,27 +1273,16 @@ function BlogPost({ post }) {
           <span style={{ fontSize: 12, color: C.textLight }}>{post.readTime} read</span>
         </div>
         <h3 style={{ fontSize: 19, fontWeight: 800, color: C.text, lineHeight: 1.35, marginBottom: 10 }}>{post.title}</h3>
-        <p style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.7, marginBottom: 16 }}>{post.excerpt}</p>
+        <p style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.7, flex: 1, marginBottom: 16 }}>{post.excerpt}</p>
 
-        {expanded && (
-          <div style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.8, whiteSpace: "pre-line", marginBottom: 16, borderTop: `1px solid ${C.cardBorder}`, paddingTop: 20 }}>
-            {post.body}
-          </div>
-        )}
-
-        <button onClick={() => { setExpanded(!expanded); if (!expanded) window.history.replaceState(null, "", `#blog-${post.slug}`); }} style={{
-          background: "none", border: "none", cursor: "pointer",
+        <span style={{
           color: C.accent, fontWeight: 700, fontSize: 14,
-          display: "flex", alignItems: "center", gap: 6, padding: 0,
+          display: "flex", alignItems: "center", gap: 6,
         }}>
-          {expanded ? "Read less" : "Read more"}
-          <ChevronDown size={16} style={{
-            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 0.3s",
-          }} />
-        </button>
+          Read article <ArrowRight size={16} />
+        </span>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -1318,13 +1308,187 @@ function BlogSection() {
           gap: 24,
         }}>
           {BLOG_POSTS.map((post, i) => (
-            <FadeIn key={post.slug} delay={i * 0.05}>
-              <BlogPost post={post} />
+            <FadeIn key={post.slug} delay={i * 0.05} style={{ height: "100%" }}>
+              <BlogCard post={post} />
             </FadeIn>
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+// ─── BLOG POST PAGE (INDIVIDUAL ARTICLE) ───
+function BlogPostPage() {
+  const { slug } = useParams();
+  const post = BLOG_POSTS.find(p => p.slug === slug);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
+  if (!post) {
+    return (
+      <>
+        <Nav />
+        <section style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "120px 32px 80px", background: C.bg }}>
+          <div style={{ textAlign: "center" }}>
+            <h1 style={{ fontSize: 48, fontWeight: 900, color: C.text, marginBottom: 16 }}>404</h1>
+            <p style={{ fontSize: 18, color: C.textMuted, marginBottom: 32 }}>This article doesn't exist.</p>
+            <Link to="/" style={{ color: C.accent, fontWeight: 700, textDecoration: "none", fontSize: 16 }}>
+              &larr; Back to The Garage Flip
+            </Link>
+          </div>
+        </section>
+        <Footer />
+      </>
+    );
+  }
+
+  // Find related posts (same category or random)
+  const related = BLOG_POSTS.filter(p => p.slug !== slug && p.category === post.category).slice(0, 2);
+  const extraRelated = related.length < 2
+    ? [...related, ...BLOG_POSTS.filter(p => p.slug !== slug && !related.includes(p)).slice(0, 2 - related.length)]
+    : related;
+
+  return (
+    <>
+      <Nav />
+      {/* Article Hero */}
+      <section style={{
+        padding: "160px 32px 60px", background: C.bgDark, position: "relative",
+      }}>
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          <Link to="/#blog" style={{
+            color: "rgba(255,255,255,0.5)", textDecoration: "none", fontSize: 14, fontWeight: 600,
+            display: "flex", alignItems: "center", gap: 8, marginBottom: 28,
+          }}>
+            &larr; Back to Garage Talk
+          </Link>
+          <div style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "center" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, background: "rgba(232,93,4,0.15)", padding: "5px 12px", borderRadius: 100, textTransform: "uppercase", letterSpacing: "1px" }}>
+              {post.category}
+            </span>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>{post.readTime} read</span>
+          </div>
+          <h1 style={{
+            fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 900, color: "#fff",
+            lineHeight: 1.15, letterSpacing: "-0.02em",
+          }}>
+            {post.title}
+          </h1>
+        </div>
+      </section>
+
+      {/* Article Body */}
+      <article style={{ padding: "60px 32px 80px", background: C.bg }}>
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          {/* Lead paragraph (excerpt) */}
+          <p style={{
+            fontSize: 19, color: C.text, lineHeight: 1.8, fontWeight: 500,
+            marginBottom: 36, paddingBottom: 36,
+            borderBottom: `1px solid ${C.cardBorder}`,
+          }}>
+            {post.excerpt}
+          </p>
+
+          {/* Full body */}
+          <div style={{
+            fontSize: 17, color: C.textMuted, lineHeight: 1.9,
+            whiteSpace: "pre-line",
+          }}>
+            {post.body}
+          </div>
+
+          {/* CTA */}
+          <div style={{
+            marginTop: 56, padding: "40px 36px", borderRadius: 16,
+            background: C.bgDark, textAlign: "center",
+          }}>
+            <h3 style={{ fontSize: 24, fontWeight: 800, color: "#fff", marginBottom: 12 }}>
+              Ready to transform your garage?
+            </h3>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.7 }}>
+              Free estimates. Same-week scheduling. One call does it all.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <a href={`tel:${BRAND.phone}`} style={{
+                padding: "14px 28px", borderRadius: 10,
+                background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
+                color: "#fff", fontWeight: 700, fontSize: 15, textDecoration: "none",
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+                <Phone size={16} /> {BRAND.phone}
+              </a>
+              <Link to="/#quote" style={{
+                padding: "14px 28px", borderRadius: 10,
+                background: C.accent, border: "none",
+                color: "#fff", fontWeight: 700, fontSize: 15, textDecoration: "none",
+                display: "flex", alignItems: "center", gap: 8,
+                boxShadow: `0 0 16px rgba(232,93,4,0.3)`,
+              }}>
+                Get a Free Quote <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      {/* Related Articles */}
+      {extraRelated.length > 0 && (
+        <section style={{ padding: "60px 32px 80px", background: C.bgAlt }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <h3 style={{ fontSize: 20, fontWeight: 800, color: C.text, marginBottom: 24 }}>More from Garage Talk</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+              {extraRelated.map(rp => (
+                <Link key={rp.slug} to={`/blog/${rp.slug}`} style={{
+                  ...glass.card, borderRadius: 14, padding: 24, textDecoration: "none", color: "inherit",
+                  transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.borderColor = "rgba(232,93,4,0.25)"; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"; }}
+                >
+                  <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "0.5px" }}>{rp.category}</span>
+                  <h4 style={{ fontSize: 16, fontWeight: 700, color: C.text, lineHeight: 1.4, margin: "8px 0 8px" }}>{rp.title}</h4>
+                  <span style={{ fontSize: 13, color: C.accent, fontWeight: 600 }}>Read article &rarr;</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <Footer />
+      <StickyMobileCTA />
+    </>
+  );
+}
+
+// ─── HOME PAGE ───
+function HomePage() {
+  const [selectedServices, setSelectedServices] = useState([]);
+
+  const handleSelectPackage = useCallback((serviceIds) => {
+    setSelectedServices(serviceIds);
+    setTimeout(() => scrollTo("quote"), 100);
+  }, []);
+
+  return (
+    <>
+      <Nav />
+      <Hero />
+      <ServicesSection />
+      <PackagesSection onSelectPackage={handleSelectPackage} />
+      <RecurringSection />
+      <QuoteBuilder selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
+      <WhySection />
+      <GuaranteeSection />
+      <FAQSection />
+      <BlogSection />
+      <ServiceAreaSection />
+      <StickyMobileCTA />
+      <Footer />
+    </>
   );
 }
 
@@ -1400,28 +1564,13 @@ function Footer() {
 
 // ─── APP ───
 export default function App() {
-  const [selectedServices, setSelectedServices] = useState([]);
-
-  const handleSelectPackage = useCallback((serviceIds) => {
-    setSelectedServices(serviceIds);
-    setTimeout(() => scrollTo("quote"), 100);
-  }, []);
-
   return (
-    <>
-      <Nav />
-      <Hero />
-      <ServicesSection />
-      <PackagesSection onSelectPackage={handleSelectPackage} />
-      <RecurringSection />
-      <QuoteBuilder selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
-      <WhySection />
-      <GuaranteeSection />
-      <FAQSection />
-      <BlogSection />
-      <ServiceAreaSection />
-      <StickyMobileCTA />
-      <Footer />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
