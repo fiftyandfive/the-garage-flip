@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Menu, X, Phone, Mail, MapPin, ArrowRight, Check, ChevronDown, Trophy, Zap, Handshake } from "lucide-react";
+import { Menu, X, Phone, Mail, MapPin, ArrowRight, Check, ChevronDown, Trophy, Zap, Handshake, Shield, Clock, Star, ChevronUp } from "lucide-react";
 
 // ─── COLOR PALETTE: "Premium Bold" ───
 const C = {
@@ -165,9 +165,9 @@ function Nav() {
       boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(255,255,255,0.6)" : "none",
       transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
     }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 88 }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 100 }}>
         <div style={{ cursor: "pointer" }} onClick={() => scrollTo("hero")}>
-          <Logo height={scrolled ? 56 : 64} dark={scrolled} />
+          <Logo height={scrolled ? 70 : 80} dark={scrolled} />
         </div>
 
         <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: 32 }}>
@@ -203,7 +203,7 @@ function Nav() {
 
       {open && (
         <div style={{
-          position: "absolute", top: 88, left: 0, right: 0,
+          position: "absolute", top: 100, left: 0, right: 0,
           background: C.navBg, backdropFilter: "blur(20px)",
           padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20,
           borderBottom: `1px solid ${C.cardBorder}`,
@@ -297,7 +297,7 @@ function Hero() {
             ...glass.cardDark, marginBottom: 36,
           }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>
-              Orlando's #1 Garage Cleanout Service
+              Orlando's Garage Transformation Experts
             </span>
           </div>
         </FadeIn>
@@ -307,8 +307,8 @@ function Hero() {
             fontSize: "clamp(42px, 7vw, 80px)", fontWeight: 900, color: "#fff",
             lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24,
           }}>
-            Garage Cleanouts.<br />
-            <span style={{ color: C.accent }}>Done In Days.</span>
+            From Chaos.<br />
+            <span style={{ color: C.accent }}>To Clean.</span>
           </h1>
         </FadeIn>
 
@@ -767,7 +767,7 @@ function WhySection() {
           <div style={{ textAlign: "center", marginBottom: 64 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Why The Garage Flip</span>
             <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 0", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-              We do things differently.
+              Park your car in your garage again.
             </h2>
           </div>
         </FadeIn>
@@ -795,6 +795,308 @@ function WhySection() {
   );
 }
 
+// ─── FAQ SECTION ───
+const FAQ_DATA = [
+  {
+    q: "How much does a garage cleanout cost in Orlando?",
+    a: "A professional garage cleanout in Orlando starts at $600 for a standard two-car garage. This includes full junk removal, hauling, disposal, and a clean sweep. Larger garages or heavy hoarding situations may cost $800–$1,200. We offer free estimates with same-week scheduling."
+  },
+  {
+    q: "How long does an epoxy garage floor installation take?",
+    a: "Most residential epoxy garage floor installations take 1–2 days. This includes surface prep, primer application, epoxy coating, and curing time. We use commercial-grade epoxy that lasts 15–20 years with proper care. Starting at $1,500 for a standard two-car garage."
+  },
+  {
+    q: "Do you install EV chargers in Orlando garages?",
+    a: "Yes — we provide Level 2 EV charger installation by licensed electricians starting at $800. We handle permitting, panel upgrades if needed, and full installation. We serve Orlando, Winter Park, Windermere, Lake Nona, Dr. Phillips, and surrounding areas."
+  },
+  {
+    q: "What areas do you serve near Orlando?",
+    a: "We serve the greater Orlando metro area including Winter Park, Windermere, Lake Nona, Dr. Phillips, College Park, Baldwin Park, Celebration, and surrounding communities."
+  },
+  {
+    q: "Can I just get a garage cleanout without other services?",
+    a: "Absolutely. Our most popular starting point is The Reset package ($800–$1,200) which includes a full garage cleanout with junk hauling and disposal. Many customers start with a cleanout and later upgrade to organization, epoxy floors, or cabinets — but there's zero pressure to add anything."
+  },
+  {
+    q: "How much does garage organization cost in Orlando?",
+    a: "Professional garage organization starts at $400 for custom sorting, shelving installation, and layout optimization. Our most popular package (The Refresh at $2,500–$4,500) includes cleanout plus epoxy flooring and custom shelving for a complete garage makeover."
+  },
+  {
+    q: "Do you offer financing for garage transformations?",
+    a: "Contact us directly to discuss payment options for larger transformation projects. Our packages range from $800 for a basic cleanout to $12,000 for a full garage retreat with cabinets, epoxy, AC, and more."
+  },
+];
+
+function FAQItem({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      style={{
+        ...glass.card,
+        borderRadius: 14,
+        overflow: "hidden",
+        transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+        cursor: "pointer",
+      }}
+      onClick={() => setOpen(!open)}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(232,93,4,0.25)"; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"; }}
+    >
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        padding: "20px 24px", gap: 16,
+      }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: C.text, lineHeight: 1.4, margin: 0 }}>{q}</h3>
+        <ChevronDown
+          size={20}
+          style={{
+            color: C.accent, flexShrink: 0,
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.3s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        />
+      </div>
+      <div style={{
+        maxHeight: open ? 300 : 0,
+        overflow: "hidden",
+        transition: "max-height 0.4s cubic-bezier(0.16,1,0.3,1)",
+      }}>
+        <p style={{
+          padding: "0 24px 20px", fontSize: 15, color: C.textMuted, lineHeight: 1.7, margin: 0,
+        }}>{a}</p>
+      </div>
+    </div>
+  );
+}
+
+function FAQSection() {
+  return (
+    <section id="faq" style={{ padding: "100px 32px 120px", background: C.bg }}>
+      <div style={{ maxWidth: 800, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 56px" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>FAQ</span>
+            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Questions homeowners ask.
+            </h2>
+            <p style={{ fontSize: 17, color: C.textMuted, lineHeight: 1.7 }}>
+              Everything you need to know before booking your garage cleanout or transformation.
+            </p>
+          </div>
+        </FadeIn>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {FAQ_DATA.map((item, i) => (
+            <FadeIn key={i} delay={i * 0.04}>
+              <FAQItem q={item.q} a={item.a} />
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── SERVICE AREAS (HIGH-INCOME NEIGHBORHOODS) ───
+const SERVICE_AREAS = [
+  {
+    city: "Winter Park",
+    desc: "Premium garage transformations for Winter Park's historic homes and luxury estates. Slatwall systems, epoxy floors, and full cleanouts tailored to homes on Park Avenue, Via Tuscany, and beyond.",
+    zip: "32789",
+    highlight: "Median household income $90K+",
+  },
+  {
+    city: "Windermere",
+    desc: "Serving Windermere's lakefront properties and gated communities like Isleworth and Keene's Pointe. Oversized 3- and 4-car garage transformations are our specialty here.",
+    zip: "34786",
+    highlight: "Median household income $120K+",
+  },
+  {
+    city: "Dr. Phillips",
+    desc: "Garage cleanouts and premium upgrades for Dr. Phillips homeowners. From Bay Hill estates to Sand Lake corridor, we turn cluttered garages into showrooms.",
+    zip: "32819",
+    highlight: "Median household income $85K+",
+  },
+  {
+    city: "Lake Nona",
+    desc: "Lake Nona's modern homes deserve modern garages. EV charger installs, smart organization, and epoxy floors for Orlando's fastest-growing premium community.",
+    zip: "32827",
+    highlight: "Median household income $95K+",
+  },
+  {
+    city: "College Park",
+    desc: "Bungalow and mid-century garage makeovers in one of Orlando's most desirable neighborhoods. Cleanouts, organization, and custom shelving built for character homes.",
+    zip: "32804",
+    highlight: "Orlando's trendiest neighborhood",
+  },
+  {
+    city: "Baldwin Park",
+    desc: "Full-service garage transformations for Baldwin Park's walkable village community. From townhome single-car garages to detached estates — we handle it all.",
+    zip: "32814",
+    highlight: "Master-planned community living",
+  },
+  {
+    city: "Celebration",
+    desc: "Disney-area homeowners trust The Garage Flip for HOA-friendly garage makeovers. Clean, organized, and camera-ready — the Celebration standard.",
+    zip: "34747",
+    highlight: "HOA-compliant transformations",
+  },
+];
+
+function ServiceAreaSection() {
+  return (
+    <section id="areas" style={{ padding: "100px 32px 120px", background: C.bgDark }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center", maxWidth: 700, margin: "0 auto 64px" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Service Areas</span>
+            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: "#fff", margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Serving Orlando's most sought-after neighborhoods.
+            </h2>
+            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>
+              From Winter Park estates to Windermere lakefronts — we bring premium garage transformations to the communities that value their homes most.
+            </p>
+          </div>
+        </FadeIn>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+          gap: 20,
+        }}>
+          {SERVICE_AREAS.map((area, i) => (
+            <FadeIn key={i} delay={i * 0.05}>
+              <div style={{
+                ...glass.cardDark,
+                borderRadius: 16, padding: 28,
+                transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
+                height: "100%", display: "flex", flexDirection: "column",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(232,93,4,0.3)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                  <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", margin: 0 }}>
+                    <MapPin size={18} style={{ display: "inline", verticalAlign: "middle", marginRight: 8, color: C.accent }} />
+                    {area.city}
+                  </h3>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: C.accent, background: "rgba(232,93,4,0.12)", padding: "4px 10px", borderRadius: 100, whiteSpace: "nowrap" }}>
+                    {area.highlight}
+                  </span>
+                </div>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, flex: 1, marginBottom: 16 }}>{area.desc}</p>
+                <button onClick={() => scrollTo("quote")} style={{
+                  padding: "12px 20px", borderRadius: 10, cursor: "pointer",
+                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+                  color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: 13,
+                  transition: "all 0.25s", width: "100%",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = "rgba(232,93,4,0.15)"; e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.color = "#fff"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}
+                >Get a Quote in {area.city}</button>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── GUARANTEE / TRUST SECTION ───
+function GuaranteeSection() {
+  const guarantees = [
+    { icon: <Shield size={28} />, title: "100% Satisfaction Guarantee", desc: "If you're not happy with the result, we'll make it right — no questions asked. Your space, your standards." },
+    { icon: <Clock size={28} />, title: "Same-Week Scheduling", desc: "We know you want it done now, not next month. Most cleanouts are scheduled within the same week you call." },
+    { icon: <Star size={28} />, title: "Transparent Pricing", desc: "No hidden fees, no surprise upcharges. You'll see your full estimate before we start — and we stick to it." },
+  ];
+
+  return (
+    <section style={{ padding: "80px 32px 100px", background: C.bgAlt }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Our Promise</span>
+            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 40px)", fontWeight: 800, color: C.text, margin: "12px 0 0", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Zero risk. Zero hassle.
+            </h2>
+          </div>
+        </FadeIn>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+          {guarantees.map((g, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <div style={{
+                textAlign: "center", padding: "36px 28px", borderRadius: 16,
+                ...glass.card,
+                transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                <div style={{ color: C.accent, marginBottom: 16, display: "flex", justifyContent: "center" }}>{g.icon}</div>
+                <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text, marginBottom: 10 }}>{g.title}</h3>
+                <p style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.7 }}>{g.desc}</p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── STICKY MOBILE CTA ───
+function StickyMobileCTA() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const h = () => setVisible(window.scrollY > 600);
+    window.addEventListener("scroll", h);
+    return () => window.removeEventListener("scroll", h);
+  }, []);
+
+  return (
+    <>
+      <div style={{
+        position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 99,
+        background: "rgba(26,26,26,0.92)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        borderTop: "1px solid rgba(255,255,255,0.1)",
+        padding: "12px 16px",
+        display: "flex", gap: 10, justifyContent: "center",
+        transform: visible ? "translateY(0)" : "translateY(100%)",
+        transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+      }}>
+        <a href={`tel:${BRAND.phone}`} style={{
+          flex: 1, maxWidth: 200, padding: "14px 20px", borderRadius: 10,
+          background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+          color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        }}>
+          <Phone size={16} /> Call Now
+        </a>
+        <button onClick={() => scrollTo("quote")} style={{
+          flex: 1, maxWidth: 200, padding: "14px 20px", borderRadius: 10,
+          background: C.accent, border: "none", cursor: "pointer",
+          color: "#fff", fontWeight: 700, fontSize: 14,
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          boxShadow: "0 0 16px rgba(232,93,4,0.3)",
+        }}>
+          <ArrowRight size={16} /> Free Quote
+        </button>
+      </div>
+
+      <style>{`
+        @media (min-width: 769px) {
+          div[style*="position: fixed"][style*="bottom: 0"] { display: none !important; }
+        }
+      `}</style>
+    </>
+  );
+}
+
 // ─── FOOTER ───
 function Footer() {
   return (
@@ -802,7 +1104,7 @@ function Footer() {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 48, marginBottom: 48 }}>
           <div>
-            <Logo height={52} dark={false} />
+            <Logo height={64} dark={false} />
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, marginTop: 16 }}>
               Premium garage transformations for Orlando homeowners. We clear it out, build it up, and give you your space back.
             </p>
@@ -810,8 +1112,8 @@ function Footer() {
 
           <div>
             <h4 style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 20 }}>Navigate</h4>
-            {["Services", "Packages", "Get a Quote"].map(l => (
-              <div key={l} onClick={() => scrollTo(l === "Get a Quote" ? "quote" : l.toLowerCase())} style={{
+            {["Services", "Packages", "Get a Quote", "FAQ", "Service Areas"].map(l => (
+              <div key={l} onClick={() => scrollTo(l === "Get a Quote" ? "quote" : l === "Service Areas" ? "areas" : l.toLowerCase())} style={{
                 cursor: "pointer", fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 12,
                 transition: "color 0.2s",
               }}
@@ -858,7 +1160,7 @@ function Footer() {
           display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12,
         }}>
           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>&copy; 2026 The Garage Flip. All rights reserved.</span>
-          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>Orlando &middot; Winter Park &middot; College Park &middot; Lake Nona &amp; Beyond</span>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>Orlando &middot; Winter Park &middot; Windermere &middot; Dr. Phillips &middot; Lake Nona &middot; College Park &middot; Baldwin Park &middot; Celebration</span>
         </div>
       </div>
     </footer>
@@ -882,6 +1184,10 @@ export default function App() {
       <PackagesSection onSelectPackage={handleSelectPackage} />
       <QuoteBuilder selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
       <WhySection />
+      <GuaranteeSection />
+      <FAQSection />
+      <ServiceAreaSection />
+      <StickyMobileCTA />
       <Footer />
     </>
   );
