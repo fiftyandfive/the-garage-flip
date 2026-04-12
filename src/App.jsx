@@ -26,7 +26,7 @@ const C = {
 const BRAND = {
   name: "The Garage Flip",
   tagline: "Your Garage. Transformed.",
-  phone: "(407) 555-0199",
+  phone: "(407) 735-6450",
   email: "hello@thegarageflip.com",
   address: "Orlando, FL",
 };
@@ -165,9 +165,9 @@ function Nav() {
       boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(255,255,255,0.6)" : "none",
       transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
     }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 100 }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 120 }}>
         <div style={{ cursor: "pointer" }} onClick={() => scrollTo("hero")}>
-          <Logo height={scrolled ? 70 : 80} dark={scrolled} />
+          <Logo height={scrolled ? 90 : 100} dark={scrolled} />
         </div>
 
         <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: 32 }}>
@@ -203,7 +203,7 @@ function Nav() {
 
       {open && (
         <div style={{
-          position: "absolute", top: 100, left: 0, right: 0,
+          position: "absolute", top: 120, left: 0, right: 0,
           background: C.navBg, backdropFilter: "blur(20px)",
           padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20,
           borderBottom: `1px solid ${C.cardBorder}`,
@@ -902,44 +902,38 @@ const SERVICE_AREAS = [
   {
     city: "Winter Park",
     desc: "Premium garage transformations for Winter Park's historic homes and luxury estates. Slatwall systems, epoxy floors, and full cleanouts tailored to homes on Park Avenue, Via Tuscany, and beyond.",
-    zip: "32789",
-    highlight: "Median household income $90K+",
   },
   {
     city: "Windermere",
     desc: "Serving Windermere's lakefront properties and gated communities like Isleworth and Keene's Pointe. Oversized 3- and 4-car garage transformations are our specialty here.",
-    zip: "34786",
-    highlight: "Median household income $120K+",
   },
   {
     city: "Dr. Phillips",
     desc: "Garage cleanouts and premium upgrades for Dr. Phillips homeowners. From Bay Hill estates to Sand Lake corridor, we turn cluttered garages into showrooms.",
-    zip: "32819",
-    highlight: "Median household income $85K+",
   },
   {
     city: "Lake Nona",
     desc: "Lake Nona's modern homes deserve modern garages. EV charger installs, smart organization, and epoxy floors for Orlando's fastest-growing premium community.",
-    zip: "32827",
-    highlight: "Median household income $95K+",
   },
   {
     city: "College Park",
     desc: "Bungalow and mid-century garage makeovers in one of Orlando's most desirable neighborhoods. Cleanouts, organization, and custom shelving built for character homes.",
-    zip: "32804",
-    highlight: "Orlando's trendiest neighborhood",
   },
   {
     city: "Baldwin Park",
     desc: "Full-service garage transformations for Baldwin Park's walkable village community. From townhome single-car garages to detached estates — we handle it all.",
-    zip: "32814",
-    highlight: "Master-planned community living",
   },
   {
     city: "Celebration",
     desc: "Disney-area homeowners trust The Garage Flip for HOA-friendly garage makeovers. Clean, organized, and camera-ready — the Celebration standard.",
-    zip: "34747",
-    highlight: "HOA-compliant transformations",
+  },
+  {
+    city: "Lake Mary",
+    desc: "Garage cleanouts and full transformations for Lake Mary's growing family communities. From Colonial TownPark to Heathrow — organized garages for organized lives.",
+  },
+  {
+    city: "Horizon West",
+    desc: "New construction meets premium garage upgrades in one of Orlando's fastest-growing luxury corridors. Epoxy floors, EV chargers, and smart storage from day one.",
   },
 ];
 
@@ -975,14 +969,11 @@ function ServiceAreaSection() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(232,93,4,0.3)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = "translateY(0)"; }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <div style={{ marginBottom: 12 }}>
                   <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", margin: 0 }}>
                     <MapPin size={18} style={{ display: "inline", verticalAlign: "middle", marginRight: 8, color: C.accent }} />
                     {area.city}
                   </h3>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: C.accent, background: "rgba(232,93,4,0.12)", padding: "4px 10px", borderRadius: 100, whiteSpace: "nowrap" }}>
-                    {area.highlight}
-                  </span>
                 </div>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, flex: 1, marginBottom: 16 }}>{area.desc}</p>
                 <button onClick={() => scrollTo("quote")} style={{
@@ -1104,7 +1095,7 @@ function Footer() {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 48, marginBottom: 48 }}>
           <div>
-            <Logo height={64} dark={false} />
+            <Logo height={80} dark={false} />
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, marginTop: 16 }}>
               Premium garage transformations for Orlando homeowners. We clear it out, build it up, and give you your space back.
             </p>
@@ -1160,7 +1151,7 @@ function Footer() {
           display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12,
         }}>
           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>&copy; 2026 The Garage Flip. All rights reserved.</span>
-          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>Orlando &middot; Winter Park &middot; Windermere &middot; Dr. Phillips &middot; Lake Nona &middot; College Park &middot; Baldwin Park &middot; Celebration</span>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>Orlando &middot; Winter Park &middot; Windermere &middot; Dr. Phillips &middot; Lake Nona &middot; College Park &middot; Baldwin Park &middot; Celebration &middot; Lake Mary &middot; Horizon West</span>
         </div>
       </div>
     </footer>
