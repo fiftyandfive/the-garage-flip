@@ -4,3 +4,5 @@ dist
 *.local
 .vercel
 vite.config.js.timestamp-*
+.env*.local
+vite.config.js.timestamp-*
