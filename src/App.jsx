@@ -159,7 +159,8 @@ function Nav() {
     { label: "Services", id: "services" },
     { label: "Packages", id: "packages" },
     { label: "Get a Quote", id: "quote" },
-    { label: "Why Us", id: "why" },
+    { label: "Garage Talk", id: "blog" },
+    { label: "FAQ", id: "faq" },
   ];
 
   return (
