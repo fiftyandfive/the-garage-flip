@@ -1,56 +1,75 @@
-import { useState, useEffect, useRef } from "react";
-import { Menu, X, Phone, Mail, MapPin, Star, ArrowRight, CheckCircle, Truck, Clock, Sparkles, Shield, Users, ChevronDown, Home } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Menu, X, Phone, Mail, MapPin, ArrowRight, Check, ChevronDown, Trophy, Zap, Handshake } from "lucide-react";
 
-// ─── COLOR PALETTE: "Premium Home" ───
+// ─── COLOR PALETTE: "Premium Bold" ───
 const C = {
-  bg: "#FAF9F6",
-  bgAlt: "#F0ECE3",
-  bgDark: "#1E1E1E",
-  text: "#2D2D2D",
-  textMuted: "#6B6B63",
-  textLight: "#8A8A82",
-  accent: "#8B7355",
-  accentHover: "#725E45",
-  accentLight: "#C4A97D",
-  accentBg: "rgba(139,115,85,0.07)",
-  accentBorder: "rgba(139,115,85,0.18)",
-  card: "#FFFFFF",
-  cardBorder: "#E8E4DC",
-  navBg: "rgba(250,249,246,0.92)",
-  heroBg: "#1C1C1C",
+  bg: "#f9f6f1",
+  bgAlt: "#f0ede6",
+  bgDark: "#1a1a1a",
+  bgDarker: "#111111",
+  text: "#1a1a1a",
+  textMuted: "#5a5a52",
+  textLight: "#8a8a82",
+  accent: "#e85d04",
+  accentHover: "#d14e00",
+  accentLight: "#ff7b2e",
+  accentBg: "rgba(232,93,4,0.08)",
+  accentBorder: "rgba(232,93,4,0.25)",
+  card: "#ffffff",
+  cardBorder: "#e8e4dc",
+  navBg: "rgba(249,246,241,0.94)",
+  heroBg: "#1a1a1a",
+  heroOverlay: "rgba(26,26,26,0.85)",
 };
 
 // ─── CONFIG ───
 const BRAND = {
   name: "The Garage Flip",
-  tagline: "Your Garage, Transformed.",
+  tagline: "Your Garage. Transformed.",
   phone: "(407) 555-0199",
   email: "hello@thegarageflip.com",
-  calendly: "https://calendly.com/thegarageflip/free-estimate",
   address: "Orlando, FL",
 };
 
-// ─── PREMIUM IMAGES (curated for each service) ───
-const IMG = {
-  // Hero: dramatic garage/workshop shot
-  hero: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1600&q=80",
-  // Garage Cleanouts: beautiful modern house with clean driveway — the dream result
-  garageClean: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80",
-  // Junk Hauling: professional team/crew at work
-  hauling: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80",
-  // Donation: warm community volunteering scene
-  donation: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&q=80",
-  // Estate Cleanouts: bright, clean, respectful modern interior
-  estate: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80",
-  // Property Management: modern apartment building
-  property: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
-  // Pre-Sale Staging: luxury staged kitchen/interior
-  staging: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-  // Supplemental
-  team: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
-  before: "https://images.unsplash.com/photo-1617850687395-620757feb1f3?w=600&q=80",
-  after: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80",
-};
+// ─── SERVICES DATA ───
+const SERVICES = [
+  { id: "cleanout", icon: "\u{1F9F9}", title: "Garage Cleanout", desc: "Full removal of clutter, junk, and unwanted items. We handle the hauling so you don't have to.", price: 600 },
+  { id: "organization", icon: "\u{1F3D7}\uFE0F", title: "Garage Organization", desc: "Custom sorting, shelving installation, and layout optimization for a space that actually works.", price: 400 },
+  { id: "epoxy", icon: "\u{1F48E}", title: "Epoxy Floor Coating", desc: "Durable, showroom-quality epoxy floors that transform the look and feel of any garage.", price: 1500 },
+  { id: "cabinets", icon: "\u{1F5C4}\uFE0F", title: "Cabinet Installation", desc: "Custom garage cabinetry for tools, gear, and storage — built to last.", price: 2000 },
+  { id: "overhead", icon: "\u{1F4E6}", title: "Overhead Storage Racks", desc: "Maximize vertical space with heavy-duty overhead storage systems.", price: 400 },
+  { id: "pressure", icon: "\u{1F6BF}", title: "Pressure Washing", desc: "Deep clean your garage floor, driveway, and exterior surfaces.", price: 200 },
+  { id: "ev", icon: "\u26A1", title: "EV Charger Installation", desc: "Level 2 EV charger installation by licensed electricians. Future-proof your garage.", price: 800 },
+  { id: "ac", icon: "\u2744\uFE0F", title: "Mini-Split AC/Heat", desc: "Keep your garage comfortable year-round with an efficient mini-split system.", price: 1500 },
+  { id: "shelving", icon: "\u{1F527}", title: "Custom Shelving & Workbenches", desc: "Built-to-order shelving and workbench solutions for the serious hobbyist or professional.", price: 500 },
+  { id: "pest", icon: "\u{1F41B}", title: "Pest Treatment", desc: "Garage-specific pest and rodent treatment before or after your cleanout.", price: 150 },
+];
+
+// ─── PACKAGES DATA ───
+const PACKAGES = [
+  {
+    name: "The Reset",
+    range: "$800 – $1,200",
+    tagline: "Start fresh.",
+    services: ["cleanout"],
+    features: ["Full garage cleanout", "Junk hauling & disposal", "Basic sweep & cleanup", "Same-week scheduling"],
+  },
+  {
+    name: "The Refresh",
+    range: "$2,500 – $4,500",
+    tagline: "The most popular transformation.",
+    popular: true,
+    services: ["cleanout", "epoxy", "shelving"],
+    features: ["Everything in The Reset", "Epoxy floor coating", "Custom shelving install", "Before/after documentation", "Organization consultation"],
+  },
+  {
+    name: "The Retreat",
+    range: "$6,000 – $12,000",
+    tagline: "The full transformation.",
+    services: ["cleanout", "epoxy", "cabinets", "ac"],
+    features: ["Everything in The Refresh", "Custom cabinet installation", "Mini-split AC/heat", "Lighting upgrade consultation", "Dedicated project manager"],
+  },
+];
 
 // ─── SMOOTH SCROLL ───
 function scrollTo(id) {
@@ -58,7 +77,7 @@ function scrollTo(id) {
 }
 
 // ─── INTERSECTION OBSERVER ───
-function useInView(threshold = 0.12) {
+function useInView(threshold = 0.1) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -71,15 +90,21 @@ function useInView(threshold = 0.12) {
   return [ref, visible];
 }
 
-function FadeIn({ children, delay = 0, className = "", style = {} }) {
+function FadeIn({ children, delay = 0, style = {} }) {
   const [ref, visible] = useInView();
   return (
-    <div ref={ref} className={className} style={{
+    <div ref={ref} style={{
       ...style,
-      opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(28px)",
-      transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0)" : "translateY(24px)",
+      transition: `opacity 0.65s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.65s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
     }}>{children}</div>
   );
+}
+
+// ─── FORMAT CURRENCY ───
+function fmt(n) {
+  return "$" + n.toLocaleString();
 }
 
 // ─── INLINE SVG LOGO ───
@@ -90,9 +115,9 @@ function GarageLogo({ size = 42, showText = false, textSize = 15, dark = true })
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width={size} height={size}>
         <defs>
           <linearGradient id="glogo" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: "#8B7355" }} />
-            <stop offset="50%" style={{ stopColor: "#C4A97D" }} />
-            <stop offset="100%" style={{ stopColor: "#8B7355" }} />
+            <stop offset="0%" style={{ stopColor: C.accent }} />
+            <stop offset="50%" style={{ stopColor: C.accentLight }} />
+            <stop offset="100%" style={{ stopColor: C.accent }} />
           </linearGradient>
         </defs>
         <rect width="120" height="120" rx="20" fill={dark ? C.bgAlt : "#2A2A2A"} />
@@ -103,8 +128,6 @@ function GarageLogo({ size = 42, showText = false, textSize = 15, dark = true })
           <line x1="20" y1="60.5" x2="64" y2="60.5" stroke="url(#glogo)" strokeWidth="0.8" opacity="0.4" />
           <line x1="20" y1="69" x2="64" y2="69" stroke="url(#glogo)" strokeWidth="0.8" opacity="0.4" />
           <line x1="20" y1="77.5" x2="64" y2="77.5" stroke="url(#glogo)" strokeWidth="0.8" opacity="0.4" />
-          <rect x="30" y="54" width="8" height="5" rx="1" fill="url(#glogo)" opacity="0.12" stroke="url(#glogo)" strokeWidth="0.6" />
-          <rect x="46" y="54" width="8" height="5" rx="1" fill="url(#glogo)" opacity="0.12" stroke="url(#glogo)" strokeWidth="0.6" />
           <g transform="translate(50, 16)">
             <path d="M0 20 C0 8, 12 0, 24 0" fill="none" stroke="url(#glogo)" strokeWidth="2.2" strokeLinecap="round" />
             <polygon points="22,-5 29,0 22,5" fill="url(#glogo)" />
@@ -112,7 +135,7 @@ function GarageLogo({ size = 42, showText = false, textSize = 15, dark = true })
         </g>
       </svg>
       {showText && (
-        <span style={{ fontWeight: 700, fontSize: textSize, color: textColor, letterSpacing: "0.5px" }}>THE GARAGE FLIP</span>
+        <span style={{ fontWeight: 800, fontSize: textSize, color: textColor, letterSpacing: "0.5px", textTransform: "uppercase" }}>The Garage Flip</span>
       )}
     </div>
   );
@@ -130,10 +153,9 @@ function Nav() {
 
   const links = [
     { label: "Services", id: "services" },
-    { label: "Process", id: "process" },
-    { label: "Pricing", id: "pricing" },
-    { label: "Results", id: "results" },
-    { label: "FAQ", id: "faq" },
+    { label: "Packages", id: "packages" },
+    { label: "Get a Quote", id: "quote" },
+    { label: "Why Us", id: "why" },
   ];
 
   return (
@@ -142,59 +164,59 @@ function Nav() {
       background: scrolled ? C.navBg : "transparent",
       backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "none",
       borderBottom: scrolled ? `1px solid ${C.cardBorder}` : "none",
-      transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)"
+      transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
     }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 80 }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 76 }}>
         <div style={{ cursor: "pointer" }} onClick={() => scrollTo("hero")}>
-          <GarageLogo size={42} showText={true} textSize={17} dark={scrolled} />
+          <GarageLogo size={38} showText textSize={16} dark={scrolled} />
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 36 }} className="desktop-nav">
+        <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: 32 }}>
           {links.map(l => (
             <span key={l.id} onClick={() => scrollTo(l.id)} style={{
-              cursor: "pointer", fontSize: 13, fontWeight: 500, letterSpacing: "0.8px",
-              color: scrolled ? C.textMuted : "rgba(255,255,255,0.65)", textTransform: "uppercase",
-              transition: "color 0.2s"
+              cursor: "pointer", fontSize: 13, fontWeight: 600, letterSpacing: "0.6px",
+              color: scrolled ? C.textMuted : "rgba(255,255,255,0.7)", textTransform: "uppercase",
+              transition: "color 0.2s",
             }}
             onMouseEnter={e => e.target.style.color = C.accent}
-            onMouseLeave={e => e.target.style.color = scrolled ? C.textMuted : "rgba(255,255,255,0.65)"}
+            onMouseLeave={e => e.target.style.color = scrolled ? C.textMuted : "rgba(255,255,255,0.7)"}
             >{l.label}</span>
           ))}
-          <button onClick={() => window.open(BRAND.calendly, "_blank")} style={{
-            padding: "12px 28px", borderRadius: 6, border: `1px solid ${C.accent}`, cursor: "pointer",
-            background: "transparent", color: C.accent, fontWeight: 600, fontSize: 12,
-            letterSpacing: "1.5px", textTransform: "uppercase",
-            transition: "all 0.3s"
+          <button onClick={() => scrollTo("quote")} style={{
+            padding: "11px 26px", borderRadius: 6, border: "none", cursor: "pointer",
+            background: C.accent, color: "#fff", fontWeight: 700, fontSize: 12,
+            letterSpacing: "1.2px", textTransform: "uppercase",
+            transition: "all 0.25s",
           }}
-          onMouseEnter={e => { e.target.style.background = C.accent; e.target.style.color = "#fff"; }}
-          onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = C.accent; }}
-          >Book Estimate</button>
+          onMouseEnter={e => e.target.style.background = C.accentHover}
+          onMouseLeave={e => e.target.style.background = C.accent}
+          >Get Free Quote</button>
         </div>
 
-        <button onClick={() => setOpen(!open)} style={{
+        <button onClick={() => setOpen(!open)} className="mobile-menu-btn" style={{
           display: "none", background: "none", border: "none", cursor: "pointer",
-          color: scrolled ? C.text : "#fff"
-        }} className="mobile-menu-btn">
+          color: scrolled ? C.text : "#fff",
+        }}>
           {open ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
       {open && (
         <div style={{
-          position: "absolute", top: 80, left: 0, right: 0,
+          position: "absolute", top: 76, left: 0, right: 0,
           background: C.navBg, backdropFilter: "blur(20px)",
           padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20,
-          borderBottom: `1px solid ${C.cardBorder}`
+          borderBottom: `1px solid ${C.cardBorder}`,
         }}>
           {links.map(l => (
             <span key={l.id} onClick={() => { scrollTo(l.id); setOpen(false); }}
-              style={{ cursor: "pointer", fontSize: 14, fontWeight: 500, color: C.textMuted, letterSpacing: "0.5px", textTransform: "uppercase" }}>{l.label}</span>
+              style={{ cursor: "pointer", fontSize: 14, fontWeight: 600, color: C.textMuted, letterSpacing: "0.5px", textTransform: "uppercase" }}>{l.label}</span>
           ))}
-          <button onClick={() => window.open(BRAND.calendly, "_blank")} style={{
+          <button onClick={() => { scrollTo("quote"); setOpen(false); }} style={{
             padding: "14px 28px", borderRadius: 6, border: "none", cursor: "pointer",
-            background: C.accent, color: "#fff", fontWeight: 600, fontSize: 13,
-            letterSpacing: "1px", textTransform: "uppercase", width: "100%"
-          }}>Book Estimate</button>
+            background: C.accent, color: "#fff", fontWeight: 700, fontSize: 13,
+            letterSpacing: "1px", textTransform: "uppercase", width: "100%",
+          }}>Get Free Quote</button>
         </div>
       )}
 
@@ -208,167 +230,88 @@ function Nav() {
   );
 }
 
-// ─── HERO (Dark section — emotional punch) ───
+// ─── HERO ───
 function Hero() {
   return (
     <section id="hero" style={{
-      minHeight: "100vh", display: "flex", alignItems: "center",
-      position: "relative", overflow: "hidden", background: C.heroBg
+      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+      background: `linear-gradient(135deg, ${C.bgDark} 0%, #2a2218 50%, ${C.bgDark} 100%)`,
+      position: "relative", overflow: "hidden", padding: "120px 32px 80px",
     }}>
       <div style={{
         position: "absolute", inset: 0,
-        backgroundImage: `url(${IMG.hero})`,
-        backgroundSize: "cover", backgroundPosition: "center",
-        filter: "brightness(0.25) contrast(1.1)"
+        background: "radial-gradient(ellipse at 30% 50%, rgba(232,93,4,0.08) 0%, transparent 60%)",
       }} />
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "linear-gradient(135deg, rgba(28,28,28,0.88) 0%, rgba(28,28,28,0.4) 50%, rgba(139,115,85,0.08) 100%)"
-      }} />
-      <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, height: 200,
-        background: `linear-gradient(to top, ${C.bg}, transparent)`
-      }} />
+      <div style={{ maxWidth: 900, textAlign: "center", position: "relative", zIndex: 1 }}>
+        <FadeIn>
+          <div style={{
+            display: "inline-block", padding: "8px 20px", borderRadius: 100,
+            border: `1px solid ${C.accentBorder}`, background: C.accentBg, marginBottom: 32,
+          }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>
+              Orlando's Premium Garage Service
+            </span>
+          </div>
+        </FadeIn>
 
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "140px 32px 100px", position: "relative", zIndex: 1, width: "100%" }}>
-        <div style={{ maxWidth: 720 }}>
-          <FadeIn>
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 18px",
-              borderRadius: 4, background: "rgba(196,169,125,0.12)", border: "1px solid rgba(196,169,125,0.25)",
-              marginBottom: 28
-            }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.accentLight }} />
-              <span style={{ fontSize: 12, color: C.accentLight, fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase" }}>
-                Orlando's Premium Garage Service
-              </span>
-            </div>
-          </FadeIn>
+        <FadeIn delay={0.1}>
+          <h1 style={{
+            fontSize: "clamp(42px, 7vw, 80px)", fontWeight: 900, color: "#fff",
+            lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24,
+          }}>
+            Your Garage.<br />
+            <span style={{ color: C.accent }}>Transformed.</span>
+          </h1>
+        </FadeIn>
 
-          <FadeIn delay={0.1}>
-            <h1 style={{
-              fontSize: "clamp(40px, 7vw, 72px)", fontWeight: 800, color: "#fff",
-              lineHeight: 1.08, margin: "0 0 24px", letterSpacing: "-0.03em"
-            }}>
-              You've been staring at 
-that garage for <span style={{ color: C.accentLight }}>years.</span>
-            </h1>
-          </FadeIn>
+        <FadeIn delay={0.2}>
+          <p style={{
+            fontSize: "clamp(16px, 2vw, 20px)", color: "rgba(255,255,255,0.6)",
+            lineHeight: 1.7, maxWidth: 600, margin: "0 auto 48px",
+          }}>
+            From cluttered chaos to clean, functional space — we handle everything.
+          </p>
+        </FadeIn>
 
-          <FadeIn delay={0.2}>
-            <p style={{
-              fontSize: "clamp(17px, 2vw, 20px)", color: "rgba(255,255,255,0.55)",
-              lineHeight: 1.7, margin: "0 0 44px", maxWidth: 540, fontWeight: 400
-            }}>
-              The boxes from three moves ago. The treadmill you swore you'd use. The "I'll deal with it this weekend" that never comes. We show up, clear it all out, and hand you back a garage that actually feels like part of your home.
-            </p>
-          </FadeIn>
+        <FadeIn delay={0.3}>
+          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+            <button onClick={() => scrollTo("quote")} style={{
+              padding: "18px 40px", borderRadius: 8, border: "none", cursor: "pointer",
+              background: C.accent, color: "#fff", fontWeight: 700, fontSize: 15,
+              letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 10,
+              transition: "all 0.25s", boxShadow: "0 4px 24px rgba(232,93,4,0.3)",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.accentHover; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.accent; e.currentTarget.style.transform = "translateY(0)"; }}
+            >Get Your Free Quote <ArrowRight size={18} /></button>
 
-          <FadeIn delay={0.3}>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-              <button onClick={() => window.open(BRAND.calendly, "_blank")} style={{
-                padding: "18px 40px", borderRadius: 6, border: "none", cursor: "pointer",
-                background: `linear-gradient(135deg, ${C.accent}, ${C.accentHover})`, color: "#fff",
-                fontWeight: 700, fontSize: 14, letterSpacing: "1px", textTransform: "uppercase",
-                display: "flex", alignItems: "center", gap: 10,
-                boxShadow: "0 4px 30px rgba(139,115,85,0.3)", transition: "transform 0.2s, box-shadow 0.2s"
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 40px rgba(139,115,85,0.4)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 30px rgba(139,115,85,0.3)"; }}
-              >
-                End the Procrastination <ArrowRight size={18} />
-              </button>
-              <button onClick={() => scrollTo("process")} style={{
-                padding: "18px 40px", borderRadius: 6, cursor: "pointer",
-                background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.7)",
-                fontWeight: 600, fontSize: 14, letterSpacing: "1px", textTransform: "uppercase",
-                border: "1px solid rgba(255,255,255,0.12)", transition: "all 0.2s"
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; e.currentTarget.style.color = "#fff"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}
-              >
-                See How It Works
-              </button>
-            </div>
-          </FadeIn>
-        </div>
+            <button onClick={() => scrollTo("services")} style={{
+              padding: "18px 40px", borderRadius: 8, cursor: "pointer",
+              background: "transparent", border: "1px solid rgba(255,255,255,0.2)",
+              color: "rgba(255,255,255,0.8)", fontWeight: 600, fontSize: 15,
+              letterSpacing: "0.5px", transition: "all 0.25s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)"; e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
+            >See Our Services</button>
+          </div>
+        </FadeIn>
 
-        {/* Stats bar */}
         <FadeIn delay={0.5}>
           <div style={{
-            display: "flex", gap: 48, marginTop: 80, paddingTop: 40,
-            borderTop: "1px solid rgba(255,255,255,0.08)", flexWrap: "wrap"
+            display: "flex", justifyContent: "center", gap: 48, marginTop: 72, flexWrap: "wrap",
           }}>
             {[
-              { num: "500+", label: "Garages Transformed" },
-              { num: "4.9", label: "Google Rating", sub: "★" },
-              { num: "3–5 hrs", label: "Avg Completion Time" },
-              { num: "Same Week", label: "Scheduling Available" },
+              { val: "500+", label: "Garages Transformed" },
+              { val: "4.9\u2605", label: "Google Rating" },
+              { val: "Same Week", label: "Scheduling" },
             ].map((s, i) => (
-              <div key={i}>
-                <div style={{ fontSize: 30, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
-                  {s.num}{s.sub && <span style={{ color: C.accentLight, marginLeft: 2 }}>{s.sub}</span>}
-                </div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontWeight: 500, marginTop: 4, letterSpacing: "0.5px", textTransform: "uppercase" }}>{s.label}</div>
+              <div key={i} style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "#fff" }}>{s.val}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontWeight: 500, letterSpacing: "0.5px", marginTop: 4 }}>{s.label}</div>
               </div>
             ))}
           </div>
-        </FadeIn>
-      </div>
-    </section>
-  );
-}
-
-// ─── TRUST STRIP ───
-function TrustStrip() {
-  return (
-    <div style={{ background: C.bg, borderBottom: `1px solid ${C.cardBorder}`, padding: "24px 32px" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
-        {["Licensed & Insured", "Eco-Friendly Disposal", "Same-Week Availability", "Free On-Site Estimates"].map((t, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <CheckCircle size={14} color={C.accent} />
-            <span style={{ fontSize: 12, fontWeight: 600, color: C.textMuted, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── PAIN POINTS SECTION (NEW — emotional hook) ───
-function PainPoints() {
-  const pains = [
-    { emoji: "📦", text: "Boxes from 3 moves ago you've never opened" },
-    { emoji: "🏋️", text: "The gym equipment that became an expensive clothes rack" },
-    { emoji: "🚗", text: "A 2-car garage where 0 cars can actually fit" },
-    { emoji: "😓", text: "Weekend plans that never include \"finally clean the garage\"" },
-  ];
-
-  return (
-    <section style={{ padding: "80px 32px 0", background: C.bg }}>
-      <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
-        <FadeIn>
-          <p style={{ fontSize: 15, color: C.textLight, fontWeight: 500, letterSpacing: "0.5px", textTransform: "uppercase", marginBottom: 20 }}>Sound familiar?</p>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12 }}>
-            {pains.map((p, i) => (
-              <FadeIn key={i} delay={i * 0.08}>
-                <div style={{
-                  display: "inline-flex", alignItems: "center", gap: 10,
-                  padding: "12px 20px", borderRadius: 40,
-                  background: C.card, border: `1px solid ${C.cardBorder}`,
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
-                }}>
-                  <span style={{ fontSize: 18 }}>{p.emoji}</span>
-                  <span style={{ fontSize: 14, color: C.text, fontWeight: 500 }}>{p.text}</span>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={0.4}>
-            <p style={{ fontSize: 20, color: C.text, fontWeight: 700, marginTop: 32, marginBottom: 0 }}>
-              You don't need a weekend. You need <span style={{ color: C.accent }}>a crew</span>.
-            </p>
-          </FadeIn>
         </FadeIn>
       </div>
     </section>
@@ -376,59 +319,42 @@ function PainPoints() {
 }
 
 // ─── SERVICES ───
-function Services() {
-  const services = [
-    { title: "Garage Cleanouts", desc: "Complete garage clearing from floor to ceiling. We sort, organize, and leave you with a space you're proud to walk into.", icon: <Sparkles size={22} />, img: IMG.garageClean },
-    { title: "Junk Hauling", desc: "Furniture, appliances, debris — if you want it gone, it's gone. Fast, clean, responsible disposal.", icon: <Truck size={22} />, img: IMG.hauling },
-    { title: "Donation Coordination", desc: "Usable items go to local charities — not the landfill. We handle sorting, scheduling pickups, and providing donation receipts.", icon: <Clock size={22} />, img: IMG.donation },
-    { title: "Estate Cleanouts", desc: "Compassionate, thorough clearing of a loved one's property. We handle everything with care and respect.", icon: <Shield size={22} />, img: IMG.estate },
-    { title: "Property Management", desc: "Recurring contracts for landlords, Airbnb hosts, and property managers. Priority scheduling, volume pricing.", icon: <Users size={22} />, img: IMG.property },
-    { title: "Pre-Sale Staging", desc: "Realtors: we clear and prep garages before listing photos. First impressions close deals.", icon: <Star size={22} />, img: IMG.staging },
-  ];
-
+function ServicesSection() {
   return (
     <section id="services" style={{ padding: "100px 32px 120px", background: C.bg }}>
       <div style={{ maxWidth: 1240, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ maxWidth: 560, marginBottom: 72 }}>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 64px" }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Services</span>
             <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-              More than junk removal.
+              Everything your garage needs.
             </h2>
             <p style={{ fontSize: 17, color: C.textMuted, lineHeight: 1.7 }}>
-              Full-service garage transformations — from cluttered chaos to clean, usable space.
+              From cleanouts to full renovations — one company, one call.
             </p>
           </div>
         </FadeIn>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: 20 }}>
-          {services.map((s, i) => (
-            <FadeIn key={i} delay={i * 0.08}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: 20,
+        }}>
+          {SERVICES.map((s, i) => (
+            <FadeIn key={s.id} delay={i * 0.05}>
               <div style={{
-                background: C.card, borderRadius: 12,
-                border: `1px solid ${C.cardBorder}`, overflow: "hidden",
-                transition: "border-color 0.3s, transform 0.3s, box-shadow 0.3s", cursor: "default",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
+                background: C.card, borderRadius: 12, padding: 28,
+                border: `1px solid ${C.cardBorder}`, height: "100%",
+                transition: "all 0.3s", cursor: "default",
+                display: "flex", flexDirection: "column",
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.accentBorder; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.08)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.cardBorder; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)"; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.accentBorder; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.06)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.cardBorder; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
               >
-                <div style={{
-                  height: 200, backgroundImage: `url(${s.img})`, backgroundSize: "cover", backgroundPosition: "center",
-                  position: "relative"
-                }}>
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%)" }} />
-                  <div style={{
-                    position: "absolute", top: 16, left: 16, width: 40, height: 40, borderRadius: 8,
-                    background: "rgba(255,255,255,0.9)", backdropFilter: "blur(8px)",
-                    border: `1px solid ${C.cardBorder}`,
-                    display: "flex", alignItems: "center", justifyContent: "center", color: C.accent
-                  }}>{s.icon}</div>
-                </div>
-                <div style={{ padding: "20px 24px 28px" }}>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, margin: "0 0 8px" }}>{s.title}</h3>
-                  <p style={{ fontSize: 14, color: C.textMuted, lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
-                </div>
+                <div style={{ fontSize: 32, marginBottom: 16 }}>{s.icon}</div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8 }}>{s.title}</h3>
+                <p style={{ fontSize: 14, color: C.textMuted, lineHeight: 1.65, flex: 1, marginBottom: 16 }}>{s.desc}</p>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.accent }}>From {fmt(s.price)}</div>
               </div>
             </FadeIn>
           ))}
@@ -438,167 +364,72 @@ function Services() {
   );
 }
 
-// ─── PROCESS ───
-function Process() {
-  const steps = [
-    { num: "01", title: "Book Your Estimate", desc: "Schedule a free 15-minute walkthrough. We assess volume, plan the cleanout, and quote a fixed price — no surprises." },
-    { num: "02", title: "We Handle Everything", desc: "Our crew arrives on your schedule. We sort, pack, haul, and leave your garage spotless. You don't lift a finger." },
-    { num: "03", title: "Enjoy Your Space", desc: "Walk into a clean, organized garage you're proud of. Most clients gain back 200+ sq ft of usable space." },
-  ];
-
+// ─── PACKAGES ───
+function PackagesSection({ onSelectPackage }) {
   return (
-    <section id="process" style={{ padding: "120px 32px", background: C.bgAlt, position: "relative" }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-        <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: 80 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Process</span>
-            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em" }}>
-              Three steps. Zero stress.
-            </h2>
-          </div>
-        </FadeIn>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32 }}>
-          {steps.map((s, i) => (
-            <FadeIn key={i} delay={i * 0.15}>
-              <div style={{
-                position: "relative", padding: "40px 32px", borderRadius: 12,
-                background: C.card, border: `1px solid ${C.cardBorder}`,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
-              }}>
-                <div style={{
-                  fontSize: 64, fontWeight: 900, color: C.accentBg.replace("0.07", "0.12"),
-                  position: "absolute", top: 16, right: 24, lineHeight: 1, letterSpacing: "-0.04em"
-                }}>{s.num}</div>
-                <div style={{
-                  width: 48, height: 2, background: `linear-gradient(90deg, ${C.accent}, transparent)`,
-                  marginBottom: 24, borderRadius: 1
-                }} />
-                <h3 style={{ fontSize: 22, fontWeight: 700, color: C.text, margin: "0 0 12px" }}>{s.title}</h3>
-                <p style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.7, margin: 0 }}>{s.desc}</p>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── URGENCY BANNER (emotional closer) ───
-function UrgencyBanner() {
-  return (
-    <section style={{
-      padding: "80px 32px", position: "relative", overflow: "hidden",
-      background: C.bgDark,
-    }}>
-      <div style={{
-        position: "absolute", inset: 0, opacity: 0.04,
-        backgroundImage: `url(${IMG.hero})`, backgroundSize: "cover"
-      }} />
-      <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
-        <FadeIn>
-          <span style={{ fontSize: 12, fontWeight: 700, color: C.accentLight, textTransform: "uppercase", letterSpacing: "3px" }}>Enough Is Enough</span>
-          <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "#fff", margin: "16px 0 20px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
-            Every weekend you say<br />"<span style={{ color: C.accentLight }}>I'll get to it next week.</span>"
-          </h2>
-          <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", maxWidth: 560, margin: "0 auto 40px", lineHeight: 1.7 }}>
-            The average homeowner waits 2.5 years before actually cleaning out their garage. One call to us and it's done in an afternoon. No guilt. No wasted weekends. Just your space, back.
-          </p>
-          <button onClick={() => window.open(BRAND.calendly, "_blank")} style={{
-            padding: "18px 48px", borderRadius: 6, border: "none", cursor: "pointer",
-            background: `linear-gradient(135deg, ${C.accent}, ${C.accentHover})`, color: "#fff",
-            fontWeight: 700, fontSize: 14, letterSpacing: "1px", textTransform: "uppercase",
-            boxShadow: "0 4px 30px rgba(139,115,85,0.3)", display: "inline-flex", alignItems: "center", gap: 10
-          }}>
-            Schedule Your Flip <ArrowRight size={18} />
-          </button>
-        </FadeIn>
-      </div>
-    </section>
-  );
-}
-
-// ─── PRICING ───
-function Pricing() {
-  const tiers = [
-    {
-      name: "Essential", price: "600", popular: false,
-      features: ["Full garage cleanout", "Junk hauling & disposal", "Basic sweep & cleanup", "Same-week scheduling"],
-      desc: "Straightforward clearing for garages that need a reset."
-    },
-    {
-      name: "Premium", price: "800", popular: true,
-      features: ["Everything in Essential", "Donation coordination & receipts", "Before/after documentation", "Organization consultation", "Eco-friendly disposal guarantee"],
-      desc: "Our signature service — the complete garage transformation."
-    },
-    {
-      name: "Total Transformation", price: "1,200", popular: false,
-      features: ["Everything in Premium", "Deep cleaning & sanitization", "Storage solution design", "Priority scheduling", "Dedicated project manager"],
-      desc: "The full luxury garage makeover experience."
-    },
-  ];
-
-  return (
-    <section id="pricing" style={{ padding: "120px 32px", background: C.bg }}>
+    <section id="packages" style={{ padding: "100px 32px 120px", background: C.bgDark }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: 72 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Pricing</span>
-            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em" }}>
-              Transparent pricing.
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 64px" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Packages</span>
+            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: "#fff", margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Transformation packages.
             </h2>
-            <p style={{ fontSize: 17, color: C.textMuted, maxWidth: 460, margin: "0 auto" }}>
-              Every project starts with a free on-site estimate. No hidden fees, ever.
+            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>
+              Pick a package or build your own custom quote below.
             </p>
           </div>
         </FadeIn>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, alignItems: "start" }}>
-          {tiers.map((t, i) => (
-            <FadeIn key={i} delay={i * 0.12}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: 24, alignItems: "stretch",
+        }}>
+          {PACKAGES.map((pkg, i) => (
+            <FadeIn key={i} delay={i * 0.1}>
               <div style={{
-                borderRadius: 12, padding: "40px 32px",
-                background: t.popular ? `linear-gradient(165deg, rgba(139,115,85,0.06) 0%, ${C.card} 40%)` : C.card,
-                border: t.popular ? `1px solid ${C.accentBorder}` : `1px solid ${C.cardBorder}`,
-                position: "relative",
-                boxShadow: t.popular ? "0 8px 30px rgba(139,115,85,0.1)" : "0 1px 3px rgba(0,0,0,0.04)"
-              }}>
-                {t.popular && (
+                background: pkg.popular ? "linear-gradient(135deg, #2a2218 0%, #1a1a1a 100%)" : "#222",
+                borderRadius: 16, padding: 36,
+                border: pkg.popular ? `2px solid ${C.accent}` : "1px solid #333",
+                position: "relative", display: "flex", flexDirection: "column", height: "100%",
+                transition: "transform 0.3s",
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-6px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
+              >
+                {pkg.popular && (
                   <div style={{
-                    position: "absolute", top: -1, left: 32, right: 32, height: 2,
-                    background: `linear-gradient(90deg, transparent, ${C.accent}, transparent)`
-                  }} />
+                    position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)",
+                    background: C.accent, color: "#fff", padding: "6px 20px", borderRadius: 100,
+                    fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase",
+                  }}>Most Popular</div>
                 )}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, margin: 0 }}>{t.name}</h3>
-                  {t.popular && <span style={{ fontSize: 10, fontWeight: 700, color: C.accent, letterSpacing: "1.5px", textTransform: "uppercase", padding: "4px 12px", borderRadius: 4, background: C.accentBg }}>Popular</span>}
-                </div>
-                <p style={{ fontSize: 14, color: C.textMuted, margin: "0 0 24px" }}>{t.desc}</p>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 32 }}>
-                  <span style={{ fontSize: 14, color: C.textLight }}>$</span>
-                  <span style={{ fontSize: 48, fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1 }}>{t.price}</span>
-                  <span style={{ fontSize: 14, color: C.textLight, marginLeft: 6 }}>starting</span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
-                  {t.features.map((f, fi) => (
-                    <div key={fi} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                      <CheckCircle size={16} color={C.accent} style={{ marginTop: 2, flexShrink: 0 }} />
-                      <span style={{ fontSize: 14, color: C.textMuted }}>{f}</span>
+
+                <h3 style={{ fontSize: 24, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{pkg.name}</h3>
+                <div style={{ fontSize: 28, fontWeight: 800, color: C.accent, marginBottom: 8 }}>{pkg.range}</div>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 28, fontStyle: "italic" }}>{pkg.tagline}</p>
+
+                <div style={{ flex: 1, marginBottom: 28 }}>
+                  {pkg.features.map((f, j) => (
+                    <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 12 }}>
+                      <Check size={16} style={{ color: C.accent, flexShrink: 0, marginTop: 2 }} />
+                      <span style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>{f}</span>
                     </div>
                   ))}
                 </div>
-                <button onClick={() => window.open(BRAND.calendly, "_blank")} style={{
-                  width: "100%", padding: "16px 24px", borderRadius: 6, cursor: "pointer",
-                  background: t.popular ? `linear-gradient(135deg, ${C.accent}, ${C.accentHover})` : "transparent",
-                  color: t.popular ? "#fff" : C.accent,
-                  border: t.popular ? "none" : `1px solid ${C.accentBorder}`,
-                  fontWeight: 700, fontSize: 13, letterSpacing: "1px", textTransform: "uppercase",
-                  transition: "all 0.3s"
+
+                <button onClick={() => onSelectPackage(pkg.services)} style={{
+                  width: "100%", padding: "16px 24px", borderRadius: 8, border: "none", cursor: "pointer",
+                  background: pkg.popular ? C.accent : "transparent",
+                  border: pkg.popular ? "none" : `1px solid ${C.accent}`,
+                  color: pkg.popular ? "#fff" : C.accent,
+                  fontWeight: 700, fontSize: 14, letterSpacing: "0.5px",
+                  transition: "all 0.25s",
                 }}
-                onMouseEnter={e => { if (!t.popular) { e.target.style.background = C.accentBg; }}}
-                onMouseLeave={e => { if (!t.popular) { e.target.style.background = "transparent"; }}}
-                >Get Free Estimate</button>
+                onMouseEnter={e => { e.currentTarget.style.background = pkg.popular ? C.accentHover : C.accent; e.currentTarget.style.color = "#fff"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = pkg.popular ? C.accent : "transparent"; e.currentTarget.style.color = pkg.popular ? "#fff" : C.accent; }}
+                >Get This Package</button>
               </div>
             </FadeIn>
           ))}
@@ -608,105 +439,240 @@ function Pricing() {
   );
 }
 
-// ─── RESULTS / REVIEWS ───
-function Results() {
-  const reviews = [
-    { name: "Sarah M.", loc: "Winter Park", text: "Three years of accumulated junk — gone in one afternoon. I can actually park both cars in the garage now. Incredible.", rating: 5 },
-    { name: "Mark & Lisa R.", loc: "College Park", text: "We couldn't believe how fast and professional the crew was. Our garage looks brand new. Already referred two neighbors.", rating: 5 },
-    { name: "David K.", loc: "Thornton Park", text: "As a realtor, I need garages camera-ready fast. The Garage Flip is now my go-to. They've prepped 6 listings for me.", rating: 5 },
-    { name: "Jennifer W.", loc: "Lake Nona", text: "They handled my late mother's estate cleanout with so much care and respect. I can't recommend them highly enough.", rating: 5 },
-  ];
+// ─── QUOTE BUILDER ───
+function QuoteBuilder({ selectedServices, setSelectedServices }) {
+  const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", garageSize: "", timeline: "", notes: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const toggle = useCallback((id) => {
+    setSelectedServices(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
+  }, [setSelectedServices]);
+
+  const total = SERVICES.filter(s => selectedServices.includes(s.id)).reduce((sum, s) => sum + s.price, 0);
+
+  const validate = () => {
+    const errs = {};
+    if (!form.name.trim()) errs.name = true;
+    if (!form.phone.trim()) errs.phone = true;
+    if (!form.email.trim() || !form.email.includes("@")) errs.email = true;
+    if (!form.address.trim()) errs.address = true;
+    if (!form.garageSize) errs.garageSize = true;
+    if (selectedServices.length === 0) errs.services = true;
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    console.log("Quote request submitted:", { services: selectedServices, total, ...form });
+    setSubmitted(true);
+  };
+
+  const inputStyle = (field) => ({
+    width: "100%", padding: "14px 16px", borderRadius: 8, fontSize: 15,
+    border: `1px solid ${errors[field] ? "#e85d04" : C.cardBorder}`,
+    background: C.card, color: C.text, outline: "none",
+    transition: "border-color 0.2s",
+    fontFamily: "inherit",
+  });
+
+  const labelStyle = { fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 6, display: "block" };
+
+  if (submitted) {
+    return (
+      <section id="quote" style={{ padding: "100px 32px 120px", background: C.bg }}>
+        <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+          <FadeIn>
+            <div style={{ fontSize: 64, marginBottom: 24 }}>&#x1F389;</div>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: C.text, marginBottom: 16 }}>You're on the list.</h2>
+            <p style={{ fontSize: 18, color: C.textMuted, lineHeight: 1.7, marginBottom: 32 }}>
+              We'll be in touch within 24 hours with your custom estimate.
+            </p>
+            <p style={{ fontSize: 16, color: C.textMuted }}>
+              <Phone size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} />
+              Or call/text us directly: <a href={`tel:${BRAND.phone}`} style={{ color: C.accent, fontWeight: 700, textDecoration: "none" }}>{BRAND.phone}</a>
+            </p>
+          </FadeIn>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section id="results" style={{ padding: "120px 32px", background: C.bgAlt }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+    <section id="quote" style={{ padding: "100px 32px 120px", background: C.bg }}>
+      <div style={{ maxWidth: 880, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: 72 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Results</span>
-            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0", letterSpacing: "-0.02em" }}>
-              What our clients say.
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 56px" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Quote Builder</span>
+            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              Build your custom quote.
             </h2>
+            <p style={{ fontSize: 17, color: C.textMuted, lineHeight: 1.7 }}>
+              Select the services you need. We'll follow up with your personalized estimate within 24 hours.
+            </p>
           </div>
         </FadeIn>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-          {reviews.map((r, i) => (
-            <FadeIn key={i} delay={i * 0.1}>
-              <div style={{
-                padding: "32px 28px", borderRadius: 12,
-                background: C.card, border: `1px solid ${C.cardBorder}`,
-                display: "flex", flexDirection: "column", height: "100%",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
-              }}>
-                <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
-                  {Array(r.rating).fill(0).map((_, si) => <Star key={si} size={14} fill={C.accentLight} color={C.accentLight} />)}
-                </div>
-                <p style={{ fontSize: 15, color: C.textMuted, lineHeight: 1.7, margin: "0 0 24px", flex: 1 }}>
-                  "{r.text}"
-                </p>
-                <div style={{ borderTop: `1px solid ${C.cardBorder}`, paddingTop: 16 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{r.name}</div>
-                  <div style={{ fontSize: 12, color: C.textLight, marginTop: 2 }}>{r.loc}</div>
-                </div>
+        <form onSubmit={handleSubmit}>
+          {/* Service checkboxes */}
+          <FadeIn delay={0.05}>
+            <div style={{
+              display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12,
+              marginBottom: 32,
+            }}>
+              {SERVICES.map(s => {
+                const checked = selectedServices.includes(s.id);
+                return (
+                  <label key={s.id} style={{
+                    display: "flex", alignItems: "center", gap: 14, padding: "16px 18px",
+                    borderRadius: 10, cursor: "pointer",
+                    background: checked ? C.accentBg : C.card,
+                    border: `1.5px solid ${checked ? C.accent : C.cardBorder}`,
+                    transition: "all 0.2s",
+                  }}
+                  onMouseEnter={e => { if (!checked) e.currentTarget.style.borderColor = C.accentBorder; }}
+                  onMouseLeave={e => { if (!checked) e.currentTarget.style.borderColor = C.cardBorder; }}
+                  >
+                    <div style={{
+                      width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+                      border: `2px solid ${checked ? C.accent : "#ccc"}`,
+                      background: checked ? C.accent : "transparent",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      transition: "all 0.2s",
+                    }}>
+                      {checked && <Check size={14} color="#fff" strokeWidth={3} />}
+                    </div>
+                    <input type="checkbox" checked={checked} onChange={() => toggle(s.id)} style={{ display: "none" }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: C.text }}>{s.icon} {s.title}</div>
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.accent, whiteSpace: "nowrap" }}>from {fmt(s.price)}</div>
+                  </label>
+                );
+              })}
+            </div>
+          </FadeIn>
+
+          {/* Live total */}
+          {errors.services && (
+            <p style={{ textAlign: "center", color: C.accent, fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Please select at least one service.</p>
+          )}
+          <FadeIn delay={0.1}>
+            <div style={{
+              textAlign: "center", padding: "20px 32px", borderRadius: 12,
+              background: C.bgDark, marginBottom: 48,
+            }}>
+              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>Estimated Starting Total</span>
+              <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", marginTop: 4 }}>
+                {total > 0 ? fmt(total) : "—"}
               </div>
-            </FadeIn>
-          ))}
-        </div>
+            </div>
+          </FadeIn>
+
+          {/* Contact form */}
+          <FadeIn delay={0.15}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+              <div>
+                <label style={labelStyle}>Full Name *</label>
+                <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={inputStyle("name")} placeholder="John Smith" />
+              </div>
+              <div>
+                <label style={labelStyle}>Phone Number *</label>
+                <input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={inputStyle("phone")} placeholder="(407) 555-1234" />
+              </div>
+              <div>
+                <label style={labelStyle}>Email Address *</label>
+                <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={inputStyle("email")} placeholder="you@email.com" />
+              </div>
+              <div>
+                <label style={labelStyle}>Address (for estimate) *</label>
+                <input type="text" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} style={inputStyle("address")} placeholder="123 Main St, Orlando, FL" />
+              </div>
+              <div>
+                <label style={labelStyle}>Garage Size *</label>
+                <select value={form.garageSize} onChange={e => setForm({ ...form, garageSize: e.target.value })} style={{ ...inputStyle("garageSize"), appearance: "auto" }}>
+                  <option value="">Select size...</option>
+                  <option value="1-car">1-Car Garage</option>
+                  <option value="2-car">2-Car Garage</option>
+                  <option value="3-car">3-Car Garage</option>
+                  <option value="oversized">Oversized</option>
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Timeline</label>
+                <select value={form.timeline} onChange={e => setForm({ ...form, timeline: e.target.value })} style={{ ...inputStyle("timeline"), appearance: "auto" }}>
+                  <option value="">Select timeline...</option>
+                  <option value="asap">ASAP</option>
+                  <option value="2weeks">Within 2 weeks</option>
+                  <option value="month">Within a month</option>
+                  <option value="exploring">Just exploring</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginBottom: 28 }}>
+              <label style={labelStyle}>Additional Notes</label>
+              <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={3}
+                style={{ ...inputStyle("notes"), resize: "vertical" }} placeholder="Anything else we should know about your garage project?" />
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.2}>
+            <button type="submit" style={{
+              width: "100%", padding: "20px 32px", borderRadius: 10, border: "none", cursor: "pointer",
+              background: C.accent, color: "#fff", fontWeight: 700, fontSize: 17,
+              letterSpacing: "0.5px", transition: "all 0.25s",
+              boxShadow: "0 4px 24px rgba(232,93,4,0.25)",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.accentHover; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.accent; e.currentTarget.style.transform = "translateY(0)"; }}
+            >Request My Free Estimate</button>
+
+            <p style={{ textAlign: "center", marginTop: 20, fontSize: 15, color: C.textMuted }}>
+              <Phone size={15} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} />
+              Or call/text us directly: <a href={`tel:${BRAND.phone}`} style={{ color: C.accent, fontWeight: 700, textDecoration: "none" }}>{BRAND.phone}</a>
+            </p>
+          </FadeIn>
+        </form>
+
+        <style>{`
+          @media (max-width: 680px) {
+            form > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </div>
     </section>
   );
 }
 
-// ─── FAQ ───
-function FAQ() {
-  const [openIdx, setOpenIdx] = useState(null);
-  const faqs = [
-    { q: "How much does a garage cleanout cost?", a: "Most 2-car garage cleanouts run $800–$1,200 depending on volume and complexity. Oversized items may require additional transportation and disposal fees. We provide a free video conference estimate before any work begins — the price we quote is the price you pay." },
-    { q: "What happens to my stuff?", a: "We sort everything into three categories: keep (stays with you), donate (local charities), and dispose (eco-friendly disposal). Anything usable goes to a good home — not the landfill. You approve the plan before we start." },
-    { q: "Do you donate usable items?", a: "Absolutely. We partner with local Orlando charities to donate furniture, tools, and household goods. For Premium and Total Transformation packages, we provide donation receipts for your records." },
-    { q: "How long does a cleanout take?", a: "Most standard garages take 3–5 hours. Heavily packed garages may take a full day. We provide a time estimate along with your price quote." },
-    { q: "Are you licensed and insured?", a: "Absolutely. The Garage Flip is fully licensed in the state of Florida with comprehensive general liability insurance." },
-    { q: "Do you work with realtors and property managers?", a: "Yes — we offer recurring contracts and priority scheduling for real estate agents, property managers, and Airbnb hosts. Contact us for custom B2B pricing." },
+// ─── WHY THE GARAGE FLIP ───
+function WhySection() {
+  const items = [
+    { icon: <Trophy size={32} />, title: "Premium Service", desc: "We're not a junk hauler. We're a transformation team." },
+    { icon: <Zap size={32} />, title: "Fast & Reliable", desc: "Most jobs completed in a single day." },
+    { icon: <Handshake size={32} />, title: "One Call Does It All", desc: "Cleanout to full renovation — one company, one call." },
   ];
 
   return (
-    <section id="faq" style={{ padding: "120px 32px", background: C.bg }}>
-      <div style={{ maxWidth: 700, margin: "0 auto" }}>
+    <section id="why" style={{ padding: "100px 32px 120px", background: C.bgAlt }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <FadeIn>
           <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>FAQ</span>
-            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0", letterSpacing: "-0.02em" }}>
-              Common questions.
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: "uppercase", letterSpacing: "3px" }}>Why The Garage Flip</span>
+            <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, color: C.text, margin: "12px 0 0", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              We do things differently.
             </h2>
           </div>
         </FadeIn>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {faqs.map((f, i) => (
-            <FadeIn key={i} delay={i * 0.05}>
-              <div style={{
-                borderRadius: 8, border: `1px solid ${openIdx === i ? C.accentBorder : C.cardBorder}`,
-                background: openIdx === i ? C.accentBg : C.card,
-                overflow: "hidden", transition: "all 0.3s",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
-              }}>
-                <button onClick={() => setOpenIdx(openIdx === i ? null : i)} style={{
-                  width: "100%", padding: "20px 24px", border: "none",
-                  background: "none", cursor: "pointer", display: "flex",
-                  justifyContent: "space-between", alignItems: "center", textAlign: "left"
-                }}>
-                  <span style={{ fontSize: 15, fontWeight: 600, color: C.text, paddingRight: 16 }}>{f.q}</span>
-                  <ChevronDown size={18} color={C.textLight} style={{
-                    transition: "transform 0.3s", transform: openIdx === i ? "rotate(180deg)" : "rotate(0)",
-                    flexShrink: 0
-                  }} />
-                </button>
-                <div style={{
-                  maxHeight: openIdx === i ? 300 : 0, overflow: "hidden",
-                  transition: "max-height 0.4s cubic-bezier(0.16,1,0.3,1)"
-                }}>
-                  <p style={{ padding: "0 24px 20px", fontSize: 14, color: C.textMuted, lineHeight: 1.7, margin: 0 }}>{f.a}</p>
-                </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 32 }}>
+          {items.map((item, i) => (
+            <FadeIn key={i} delay={i * 0.1}>
+              <div style={{ textAlign: "center", padding: "40px 32px" }}>
+                <div style={{ color: C.accent, marginBottom: 20, display: "flex", justifyContent: "center" }}>{item.icon}</div>
+                <h3 style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 12 }}>{item.title}</h3>
+                <p style={{ fontSize: 16, color: C.textMuted, lineHeight: 1.7 }}>{item.desc}</p>
               </div>
             </FadeIn>
           ))}
@@ -719,63 +685,67 @@ function FAQ() {
 // ─── FOOTER ───
 function Footer() {
   return (
-    <footer style={{ background: C.bgDark, borderTop: `1px solid ${C.cardBorder}`, padding: "72px 32px 40px" }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 48, marginBottom: 56 }}>
+    <footer style={{ background: C.bgDarker, padding: "64px 32px 40px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 48, marginBottom: 48 }}>
           <div>
-            <div style={{ marginBottom: 20 }}>
-              <GarageLogo size={36} showText={true} textSize={15} dark={false} />
-            </div>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65 }}>
-              Premium garage cleanouts for Orlando homeowners. We clear it out, haul it away, and give you your space back.
+            <GarageLogo size={36} showText textSize={14} dark={false} />
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, marginTop: 16 }}>
+              Premium garage transformations for Orlando homeowners. We clear it out, build it up, and give you your space back.
             </p>
           </div>
 
           <div>
-            <h4 style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, margin: "0 0 20px", textTransform: "uppercase", letterSpacing: "2px" }}>Navigate</h4>
-            {["Services", "Process", "Pricing", "Results", "FAQ"].map(l => (
-              <div key={l} onClick={() => scrollTo(l.toLowerCase())}
-                style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", cursor: "pointer", marginBottom: 12, transition: "color 0.2s" }}
-                onMouseEnter={e => e.target.style.color = C.accentLight}
-                onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.4)"}
+            <h4 style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 20 }}>Navigate</h4>
+            {["Services", "Packages", "Get a Quote"].map(l => (
+              <div key={l} onClick={() => scrollTo(l === "Get a Quote" ? "quote" : l.toLowerCase())} style={{
+                cursor: "pointer", fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 12,
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={e => e.target.style.color = C.accent}
+              onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.4)"}
               >{l}</div>
             ))}
           </div>
 
           <div>
-            <h4 style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, margin: "0 0 20px", textTransform: "uppercase", letterSpacing: "2px" }}>Contact</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {[
-                { icon: <Phone size={14} />, text: BRAND.phone },
-                { icon: <Mail size={14} />, text: BRAND.email },
-                { icon: <MapPin size={14} />, text: BRAND.address },
-              ].map((c, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.4)", fontSize: 14 }}>
-                  <span style={{ color: C.accentLight }}>{c.icon}</span> {c.text}
-                </div>
-              ))}
+            <h4 style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 20 }}>Contact</h4>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <Phone size={14} color={C.accent} />
+              <a href={`tel:${BRAND.phone}`} style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{BRAND.phone}</a>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <Mail size={14} color={C.accent} />
+              <a href={`mailto:${BRAND.email}`} style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{BRAND.email}</a>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <MapPin size={14} color={C.accent} />
+              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>{BRAND.address}</span>
             </div>
           </div>
 
           <div>
-            <h4 style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, margin: "0 0 20px", textTransform: "uppercase", letterSpacing: "2px" }}>Get Started</h4>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, marginBottom: 20 }}>
-              Book your free estimate and see why Orlando homeowners choose The Garage Flip.
+            <h4 style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 20 }}>Get Started</h4>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, marginBottom: 20 }}>
+              Build your custom quote and see why Orlando homeowners choose The Garage Flip.
             </p>
-            <button onClick={() => window.open(BRAND.calendly, "_blank")} style={{
-              padding: "14px 32px", borderRadius: 6, border: "none", cursor: "pointer",
-              background: `linear-gradient(135deg, ${C.accent}, ${C.accentHover})`, color: "#fff",
-              fontWeight: 700, fontSize: 12, letterSpacing: "1px", textTransform: "uppercase"
-            }}>Book Estimate</button>
+            <button onClick={() => scrollTo("quote")} style={{
+              padding: "12px 24px", borderRadius: 6, border: "none", cursor: "pointer",
+              background: C.accent, color: "#fff", fontWeight: 700, fontSize: 13,
+              letterSpacing: "0.5px", transition: "all 0.2s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = C.accentHover}
+            onMouseLeave={e => e.currentTarget.style.background = C.accent}
+            >Build Your Quote</button>
           </div>
         </div>
 
         <div style={{
-          borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 28,
-          display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12
+          borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 24,
+          display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12,
         }}>
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>&copy; {new Date().getFullYear()} The Garage Flip. All rights reserved.</span>
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>Orlando · Winter Park · College Park · Lake Nona & Beyond</span>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>&copy; 2026 The Garage Flip. All rights reserved.</span>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)" }}>Orlando &middot; Winter Park &middot; College Park &middot; Lake Nona &amp; Beyond</span>
         </div>
       </div>
     </footer>
@@ -784,19 +754,22 @@ function Footer() {
 
 // ─── APP ───
 export default function App() {
+  const [selectedServices, setSelectedServices] = useState([]);
+
+  const handleSelectPackage = useCallback((serviceIds) => {
+    setSelectedServices(serviceIds);
+    setTimeout(() => scrollTo("quote"), 100);
+  }, []);
+
   return (
-    <div style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", margin: 0, background: C.bg }}>
+    <>
       <Nav />
       <Hero />
-      <TrustStrip />
-      <PainPoints />
-      <Services />
-      <Process />
-      <UrgencyBanner />
-      <Pricing />
-      <Results />
-      <FAQ />
+      <ServicesSection />
+      <PackagesSection onSelectPackage={handleSelectPackage} />
+      <QuoteBuilder selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
+      <WhySection />
       <Footer />
-    </div>
+    </>
   );
 }
