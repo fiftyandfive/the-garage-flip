@@ -113,7 +113,7 @@ function fmt(n) {
 }
 
 // ─── HERO IMAGE ───
-const HERO_IMG = "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=1920&q=80";
+const HERO_IMG = "https://images.unsplash.com/photo-1530124566582-a45a7e3d0c74?w=1920&q=80";
 
 // ─── LOGO COMPONENT ───
 function Logo({ height = 44, dark = true }) {
@@ -251,13 +251,14 @@ function Hero() {
     <section id="hero" style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
       position: "relative", overflow: "hidden", padding: "120px 32px 80px",
+      background: C.bgDark,
     }}>
       {/* Background image */}
       <div style={{
-        position: "absolute", inset: 0,
+        position: "absolute", inset: 0, background: C.bgDark,
         backgroundImage: `url(${HERO_IMG})`,
         backgroundSize: "cover", backgroundPosition: "center",
-        filter: "brightness(0.35) contrast(1.1)",
+        filter: "brightness(0.3) contrast(1.15) saturate(0.8)",
       }} />
       {/* Orange accent glow */}
       <div style={{
@@ -287,8 +288,8 @@ function Hero() {
             fontSize: "clamp(42px, 7vw, 80px)", fontWeight: 900, color: "#fff",
             lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24,
           }}>
-            We Clear It Out.<br />
-            <span style={{ color: C.accent }}>You Get It Back.</span>
+            Garage Cleanouts.<br />
+            <span style={{ color: C.accent }}>Done In Days.</span>
           </h1>
         </FadeIn>
 
@@ -297,7 +298,7 @@ function Hero() {
             fontSize: "clamp(16px, 2vw, 20px)", color: "rgba(255,255,255,0.65)",
             lineHeight: 1.7, maxWidth: 620, margin: "0 auto 48px",
           }}>
-            Garage cleanouts, junk removal, and full transformations — done in days, not weeks. One call handles everything from the clutter to the custom finish.
+            Junk removal, deep cleaning, and full garage transformations for Orlando homeowners. We show up, clear it out, and leave it spotless.
           </p>
         </FadeIn>
 
