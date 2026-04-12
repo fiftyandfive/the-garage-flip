@@ -112,8 +112,14 @@ function fmt(n) {
   return "$" + n.toLocaleString();
 }
 
-// ─── HERO IMAGE ───
-const HERO_IMG = "https://images.unsplash.com/photo-1530124566582-a45a7e3d0c74?w=1920&q=80";
+// ─── HERO IMAGES (rotating) ───
+const HERO_IMGS = [
+  "https://images.unsplash.com/photo-1635108198395-82a67cd5eaec?w=1920&q=80",
+  "https://images.unsplash.com/photo-1635108198854-26645ffe6714?w=1920&q=80",
+  "https://images.unsplash.com/photo-1642948815603-2358193c3241?w=1920&q=80",
+  "https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?w=1920&q=80",
+  "https://images.unsplash.com/photo-1586582636676-9ca2d4cedb9a?w=1920&q=80",
+];
 
 // ─── LOGO COMPONENT ───
 function Logo({ height = 44, dark = true }) {
@@ -159,9 +165,9 @@ function Nav() {
       boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(255,255,255,0.6)" : "none",
       transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
     }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 76 }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 88 }}>
         <div style={{ cursor: "pointer" }} onClick={() => scrollTo("hero")}>
-          <Logo height={scrolled ? 40 : 46} dark={scrolled} />
+          <Logo height={scrolled ? 56 : 64} dark={scrolled} />
         </div>
 
         <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: 32 }}>
@@ -197,7 +203,7 @@ function Nav() {
 
       {open && (
         <div style={{
-          position: "absolute", top: 76, left: 0, right: 0,
+          position: "absolute", top: 88, left: 0, right: 0,
           background: C.navBg, backdropFilter: "blur(20px)",
           padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20,
           borderBottom: `1px solid ${C.cardBorder}`,
@@ -247,19 +253,32 @@ const glass = {
 
 // ─── HERO ───
 function Hero() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % HERO_IMGS.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section id="hero" style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
       position: "relative", overflow: "hidden", padding: "120px 32px 80px",
       background: C.bgDark,
     }}>
-      {/* Background image */}
-      <div style={{
-        position: "absolute", inset: 0, background: C.bgDark,
-        backgroundImage: `url(${HERO_IMG})`,
-        backgroundSize: "cover", backgroundPosition: "center",
-        filter: "brightness(0.3) contrast(1.15) saturate(0.8)",
-      }} />
+      {/* Rotating background images with crossfade */}
+      {HERO_IMGS.map((img, i) => (
+        <div key={i} style={{
+          position: "absolute", inset: 0, background: C.bgDark,
+          backgroundImage: `url(${img})`,
+          backgroundSize: "cover", backgroundPosition: "center",
+          filter: "brightness(0.3) contrast(1.15) saturate(0.8)",
+          opacity: i === current ? 1 : 0,
+          transition: "opacity 1.5s ease-in-out",
+        }} />
+      ))}
       {/* Orange accent glow */}
       <div style={{
         position: "absolute", inset: 0,
@@ -349,6 +368,18 @@ function Hero() {
             ))}
           </div>
         </FadeIn>
+
+        {/* Image carousel dots */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 32 }}>
+          {HERO_IMGS.map((_, i) => (
+            <button key={i} onClick={() => setCurrent(i)} style={{
+              width: i === current ? 24 : 8, height: 8,
+              borderRadius: 100, border: "none", cursor: "pointer",
+              background: i === current ? C.accent : "rgba(255,255,255,0.25)",
+              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+            }} />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -771,7 +802,7 @@ function Footer() {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 48, marginBottom: 48 }}>
           <div>
-            <Logo height={38} dark={false} />
+            <Logo height={52} dark={false} />
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, marginTop: 16 }}>
               Premium garage transformations for Orlando homeowners. We clear it out, build it up, and give you your space back.
             </p>
