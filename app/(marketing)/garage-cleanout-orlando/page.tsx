@@ -92,14 +92,15 @@ export default function GarageCleanoutOrlando() {
 
               <div style={{ marginTop: 40 }}>
                 <h3>Neighborhoods we serve</h3>
-                <ul style={{ listStyle: "none", padding: 0, marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 8, color: "var(--c-text-muted)" }}>
+                <ul style={{ listStyle: "none", padding: 0, marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 8 }}>
                   {NEIGHBORHOODS.map((n) => (
-                    <li key={n.slug}>{n.name}</li>
+                    <li key={n.slug}>
+                      <Link href={`/garage-cleanout-${n.slug}`} style={{ color: "var(--c-text)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+                        {n.name}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
-                <p style={{ fontSize: 13, color: "var(--c-text-light)", marginTop: 10 }}>
-                  Dedicated neighborhood pages shipping in Phase 2.
-                </p>
               </div>
             </div>
 

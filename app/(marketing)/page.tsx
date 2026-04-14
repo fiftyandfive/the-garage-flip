@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
 import { PackageGrid } from "@/components/PackageGrid";
-import { FounderPromise } from "@/components/FounderPromise";
 import { FAQ } from "@/components/FAQ";
 import { JsonLd } from "@/components/JsonLd";
 import { faqPageSchema, serviceSchema } from "@/lib/schema";
@@ -42,8 +41,6 @@ export default function HomePage() {
           <PackageGrid />
         </div>
       </section>
-
-      <FounderPromise />
 
       <section className="section">
         <div className="container-narrow">

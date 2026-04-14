@@ -29,9 +29,10 @@ export function Footer() {
           <h4>Services</h4>
           <ul>
             <li><Link href="/garage-cleanout-orlando">Garage cleanout</Link></li>
+            <li><Link href="/garage-organization-orlando">Garage organization</Link></li>
+            <li><Link href="/junk-removal-orlando">Junk removal</Link></li>
             <li><Link href="/pricing">Pricing</Link></li>
             <li><Link href="/book">Free quote</Link></li>
-            <li><Link href="/faq">FAQ</Link></li>
           </ul>
         </div>
 
@@ -39,17 +40,18 @@ export function Footer() {
           <h4>Neighborhoods</h4>
           <ul>
             {NEIGHBORHOODS.map((n) => (
-              <li key={n.slug}>{n.name}</li>
+              <li key={n.slug}>
+                <Link href={`/garage-cleanout-${n.slug}`}>{n.name}</Link>
+              </li>
             ))}
           </ul>
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,.45)", marginTop: 10 }}>
-            Dedicated pages coming soon.
-          </p>
         </div>
 
         <div>
-          <h4>Contact</h4>
+          <h4>Company</h4>
           <ul>
+            <li><Link href="/about">About</Link></li>
+            <li><Link href="/faq">FAQ</Link></li>
             <li><a href={`tel:${BRAND.phoneTel}`}>Call {BRAND.phone}</a></li>
             <li><a href={`sms:${BRAND.phoneSms}`}>Text us a photo</a></li>
             <li><a href={`mailto:${BRAND.email}`}>{BRAND.email}</a></li>

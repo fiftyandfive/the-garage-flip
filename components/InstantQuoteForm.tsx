@@ -37,6 +37,8 @@ export function InstantQuoteForm({ compact, source, defaultService }: Props) {
     intent_ac: false,
     intent_full_transformation: false,
   });
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoErr, setPhotoErr] = useState<string>("");
   const [state, setState] = useState<"idle" | "sending" | "ok" | "err">("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
@@ -47,15 +49,47 @@ export function InstantQuoteForm({ compact, source, defaultService }: Props) {
     setIntent((s) => ({ ...s, [k]: !s[k] }));
   }
 
+  function onPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    setPhotoErr("");
+    const files = Array.from(e.target.files || []);
+    const capped = files.slice(0, 3);
+    const over = capped.find((f) => f.size > 4 * 1024 * 1024);
+    if (over) {
+      setPhotoErr(`"${over.name}" is over 4MB. Try a smaller photo.`);
+      setPhotos([]);
+      return;
+    }
+    if (files.length > 3) {
+      setPhotoErr("Max 3 photos — we'll use the first 3.");
+    }
+    setPhotos(capped);
+  }
+
+  function fileToBase64(f: File): Promise<{ filename: string; content: string }> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        const base64 = result.includes(",") ? result.split(",")[1] : result;
+        resolve({ filename: f.name, content: base64 });
+      };
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(f);
+    });
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setState("sending");
     setErrorMsg("");
     try {
+      const attachments = photos.length
+        ? await Promise.all(photos.map(fileToBase64))
+        : [];
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...form, ...intent, source: source || "form", service: defaultService }),
+        body: JSON.stringify({ ...form, ...intent, source: source || "form", service: defaultService, attachments }),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
@@ -144,10 +178,19 @@ export function InstantQuoteForm({ compact, source, defaultService }: Props) {
       <div className="form-field">
         <label htmlFor="q-photo">📷 Photo of the garage (optional, but speeds things up)</label>
         <input id="q-photo" type="file" accept="image/*" multiple
+          onChange={onPhotos}
           style={{ padding: 8, background: "var(--c-band)" }} />
         <span style={{ fontSize: 12, color: "var(--c-text-muted)" }}>
-          A quick phone photo = faster, more accurate quote.
+          A quick phone photo = faster, more accurate quote. Up to 3 photos, 4MB each.
         </span>
+        {photoErr ? (
+          <span style={{ fontSize: 12, color: "#c92a2a", marginTop: 4 }}>{photoErr}</span>
+        ) : null}
+        {photos.length ? (
+          <span style={{ fontSize: 12, color: "var(--c-accent)", marginTop: 4, fontWeight: 600 }}>
+            {photos.length} photo{photos.length > 1 ? "s" : ""} attached.
+          </span>
+        ) : null}
       </div>
 
       {/* Future-intent capture — structured columns, never free text */}

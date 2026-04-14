@@ -13,8 +13,10 @@ export function Nav() {
         </Link>
         <div className="nav-links">
           <Link href="/garage-cleanout-orlando">Cleanouts</Link>
+          <Link href="/garage-organization-orlando">Organization</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/faq">FAQ</Link>
+          <Link href="/about">About</Link>
           <a href={`tel:${BRAND.phoneTel}`} style={{ fontWeight: 700 }}>{BRAND.phone}</a>
           <Link href="/book" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: 14 }}>
             Get a quote

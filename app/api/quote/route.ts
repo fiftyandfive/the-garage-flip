@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { saveQuoteToAirtable, type QuoteRecord } from "@/lib/airtable";
-import { sendQuoteEmail } from "@/lib/email";
+import { sendQuoteEmail, type Attachment } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -19,6 +19,7 @@ type Payload = {
   intent_ev_charger?: boolean;
   intent_ac?: boolean;
   intent_full_transformation?: boolean;
+  attachments?: Attachment[];
 };
 
 export async function POST(req: Request) {
@@ -51,11 +52,19 @@ export async function POST(req: Request) {
     intent_full_transformation: !!body.intent_full_transformation,
   };
 
+  // Cap attachments to 3 and 4MB each (base64 chars ≈ 1.37x bytes; compare generously at 6MB string len).
+  const safeAttachments: Attachment[] = Array.isArray(body.attachments)
+    ? body.attachments
+        .filter((a) => a && typeof a.filename === "string" && typeof a.content === "string")
+        .slice(0, 3)
+        .filter((a) => a.content.length < 6 * 1024 * 1024)
+    : [];
+
   const airtableResult = await saveQuoteToAirtable(record).catch((e) => {
     console.error("airtable error", e);
     return null;
   });
-  const emailResult = await sendQuoteEmail(record).catch((e) => {
+  const emailResult = await sendQuoteEmail(record, safeAttachments).catch((e) => {
     console.error("email error", e);
     return null;
   });
