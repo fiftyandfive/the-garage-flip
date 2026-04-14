@@ -1,8 +1,24 @@
+# Dependencies
 node_modules
-dist
+
+# Build
+/.next
+/out
+/build
+/dist
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Next.js / TS
+next-env.d.ts
+*.tsbuildinfo
+
+# Editor / OS
 .DS_Store
 *.local
 .vercel
-vite.config.js.timestamp-*
-.env*.local
-vite.config.js.timestamp-*
+.vscode
+.idea
