@@ -4,8 +4,8 @@ import { Menu, X, Check, Phone, Mail, MapPin, ChevronDown, Star, ArrowRight, Mes
 // ─── BRAND ───────────────────────────────────────────────────────
 const BRAND = {
   name: "The Garage Flip",
-  phone: "(407) 555-0199",
-  phoneTel: "4075550199",
+  phone: "(407) 735-6450",
+  phoneTel: "4077356450",
   email: "hello@thegarageflip.com",
   address: "Orlando, FL",
   calendly: "https://calendly.com/thegarageflip/free-estimate",
@@ -27,7 +27,7 @@ const C = {
   accentGlow: "rgba(249,115,22,0.28)",
 };
 
-const FONT_DISPLAY = `'Archivo Black', 'Archivo', 'Inter', sans-serif`;
+const FONT_DISPLAY = `'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif`;
 const FONT_BODY = `'Inter', -apple-system, BlinkMacSystemFont, sans-serif`;
 const GRADIENT_ORANGE = `linear-gradient(135deg,#F26B1F,#D4530A)`;
 const SHADOW_ORANGE = `0 8px 30px rgba(242,107,31,0.32)`;
@@ -243,7 +243,19 @@ function Nav() {
 // ─── HERO ────────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section id="top" style={{ position: "relative", background: `linear-gradient(180deg, ${C.dark} 0%, ${C.darkSoft} 100%)`, color: "#fff", overflow: "hidden", paddingTop: 140, paddingBottom: 80 }}>
+    <section id="top" style={{ position: "relative", background: C.dark, color: "#fff", overflow: "hidden", paddingTop: 140, paddingBottom: 80 }}>
+      {/* Hero background image */}
+      <div aria-hidden="true" style={{
+        position: "absolute", inset: 0,
+        backgroundImage: `url("https://images.unsplash.com/photo-1632823471406-4c5c7d6e2e8f?w=1920&q=80&auto=format&fit=crop")`,
+        backgroundSize: "cover", backgroundPosition: "center", opacity: 0.32, pointerEvents: "none",
+      }} />
+      {/* Dark gradient overlay for legibility */}
+      <div aria-hidden="true" style={{
+        position: "absolute", inset: 0,
+        background: `linear-gradient(180deg, rgba(14,14,16,0.78) 0%, rgba(14,14,16,0.62) 40%, rgba(22,22,26,0.9) 100%)`,
+        pointerEvents: "none",
+      }} />
       {/* Animated copper orb */}
       <div aria-hidden="true" style={{
         position: "absolute", top: "10%", right: "-15%", width: "70vw", height: "70vw", maxWidth: 900, maxHeight: 900,
@@ -256,12 +268,18 @@ function Hero() {
         filter: "blur(40px)", pointerEvents: "none", animation: "tgfOrb2 28s ease-in-out infinite",
       }} />
       <Grain opacity={0.04} />
-      <div style={{ position: "relative", zIndex: 2, maxWidth: 1100, margin: "0 auto", padding: "60px 24px 40px", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 999, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.78)", marginBottom: 32 }}>
+      <div style={{ position: "relative", zIndex: 2, maxWidth: 1100, margin: "0 auto", padding: "40px 24px 40px", textAlign: "center" }}>
+        {/* Prominent logo */}
+        <img
+          src="/logo-transparent.png"
+          alt="The Garage Flip"
+          style={{ height: "clamp(96px, 13vw, 140px)", width: "auto", margin: "0 auto 28px", display: "block", filter: "drop-shadow(0 12px 40px rgba(242,107,31,0.35))" }}
+        />
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 999, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.78)", marginBottom: 32, backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
           <span style={{ width: 6, height: 6, borderRadius: 999, background: C.accent, boxShadow: `0 0 12px ${C.accent}` }} />
           Orlando · Same-Week Service
         </div>
-        <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: "clamp(56px, 9vw, 96px)", lineHeight: 0.98, letterSpacing: "-0.03em", marginBottom: 24, color: "#fff" }}>
+        <h1 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: "clamp(56px, 9vw, 104px)", lineHeight: 0.98, letterSpacing: "-0.035em", marginBottom: 24, color: "#fff" }}>
           Your Garage.<br />Transformed.
         </h1>
         <p style={{ fontSize: "clamp(17px, 1.6vw, 21px)", lineHeight: 1.5, color: "rgba(255,255,255,0.76)", maxWidth: 620, margin: "0 auto 40px", fontWeight: 400 }}>
@@ -805,6 +823,9 @@ function MobileStickyCTA() {
 function GlobalStyles() {
   return (
     <style>{`
+      /* Display font defaults to 700 weight (Space Grotesk Bold) wherever used */
+      h1, h2, h3 { font-weight: 700; }
+
       @keyframes tgfOrb {
         0%, 100% { transform: translate(0, 0) scale(1); }
         33% { transform: translate(-6%, 4%) scale(1.05); }
