@@ -29,7 +29,7 @@ async function submitToFormspree(record: QuoteRecord) {
     record.intent_epoxy && "Epoxy",
     record.intent_cabinets && "Cabinets",
     record.intent_racks && "Overhead racks",
-    record.intent_ev_charger && "EV charger",
+    record.intent_ev_charger && "EV charging",
     record.intent_ac && "AC / climate",
     record.intent_full_transformation && "Full transformation",
   ].filter(Boolean);
