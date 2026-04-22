@@ -4,6 +4,8 @@ import { sendQuoteEmail, type Attachment } from "@/lib/email";
 
 export const runtime = "nodejs";
 
+const FORMSPREE_URL = "https://formspree.io/f/xkokwnov";
+
 type Payload = {
   name: string;
   phone: string;
@@ -21,6 +23,34 @@ type Payload = {
   intent_full_transformation?: boolean;
   attachments?: Attachment[];
 };
+
+async function submitToFormspree(record: QuoteRecord) {
+  const intents = [
+    record.intent_epoxy && "Epoxy",
+    record.intent_cabinets && "Cabinets",
+    record.intent_racks && "Overhead racks",
+    record.intent_ev_charger && "EV charger",
+    record.intent_ac && "AC / climate",
+    record.intent_full_transformation && "Full transformation",
+  ].filter(Boolean);
+
+  const res = await fetch(FORMSPREE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({
+      name: record.name,
+      phone: record.phone,
+      address: record.address,
+      garageSize: record.garageSize,
+      timeline: record.timeline,
+      source: record.source,
+      futureInterest: intents.length ? intents.join(", ") : "None selected",
+      _subject: `New quote: ${record.name} — ${record.garageSize} / ${record.timeline}`,
+    }),
+  });
+  if (!res.ok) throw new Error(`Formspree ${res.status}`);
+  return true;
+}
 
 export async function POST(req: Request) {
   let body: Payload;
@@ -52,7 +82,6 @@ export async function POST(req: Request) {
     intent_full_transformation: !!body.intent_full_transformation,
   };
 
-  // Cap attachments to 3 and 4MB each (base64 chars ≈ 1.37x bytes; compare generously at 6MB string len).
   const safeAttachments: Attachment[] = Array.isArray(body.attachments)
     ? body.attachments
         .filter((a) => a && typeof a.filename === "string" && typeof a.content === "string")
@@ -60,23 +89,28 @@ export async function POST(req: Request) {
         .filter((a) => a.content.length < 6 * 1024 * 1024)
     : [];
 
+  const formspreeResult = await submitToFormspree(record).catch((e) => {
+    console.error("formspree error", e);
+    return null;
+  });
+
   const airtableResult = await saveQuoteToAirtable(record).catch((e) => {
     console.error("airtable error", e);
     return null;
   });
+
   const emailResult = await sendQuoteEmail(record, safeAttachments).catch((e) => {
     console.error("email error", e);
     return null;
   });
 
-  if (!airtableResult && !emailResult) {
-    // Both destinations failed and no creds are set — still return OK so the user sees success.
-    // Logs will show the payload for manual follow-up.
+  if (!formspreeResult && !airtableResult && !emailResult) {
     console.log("[quote lead — NO DESTINATION CONFIGURED]", record);
   }
 
   return NextResponse.json({
     ok: true,
+    formspree: !!formspreeResult,
     airtable: airtableResult,
     emailed: !!emailResult && !emailResult.stubbed,
   });
