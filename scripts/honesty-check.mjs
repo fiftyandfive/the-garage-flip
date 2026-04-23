@@ -43,8 +43,10 @@ const SOFT = [
 ];
 
 // Intent checkboxes legitimately mention epoxy/cabinets/EV/AC in InstantQuoteForm — allow.
+// The quote API route emits those same intent labels into Formspree/Airtable — allow.
 const ALLOW_FILES = new Set([
   "components/InstantQuoteForm.tsx",
+  "app/api/quote/route.ts",
   TRUST_STRIP_FILE,
 ]);
 
