@@ -26,6 +26,10 @@ export default defineConfig({
         thorntonPark: city('thornton-park'),
         celebration: city('celebration'),
         heathrow: city('heathrow'),
+        altamonteSprings: city('altamonte-springs'),
+        oviedo: city('oviedo'),
+        apopka: city('apopka'),
+        kissimmee: city('kissimmee'),
         // Guides
         guideCost: resolve(__dirname, 'garage-cleanout-cost-orlando.html'),
         guideVsJunk: resolve(__dirname, 'garage-cleanout-vs-junk-removal.html'),
