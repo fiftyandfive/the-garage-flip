@@ -313,6 +313,8 @@ footer.site{background:var(--ink);color:rgba(252,250,246,.62);padding:clamp(80px
 .market-run span::after{content:" · ";color:var(--bronze);}
 .market-run span:last-child::after{content:"";}
 .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:54px;padding-top:24px;border-top:1px solid var(--hair-d);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(252,250,246,.4);}
+.foot-bottom a{color:rgba(252,250,246,.6);transition:color .2s;}
+.foot-bottom a:hover{color:var(--bronze-bright);}
 
 /* one subtle entrance per section */
 .rv{opacity:0;transform:translateY(16px);transition:opacity .32s var(--ease),transform .32s var(--ease);}
@@ -360,4 +362,21 @@ footer.site{background:var(--ink);color:rgba(252,250,246,.62);padding:clamp(80px
   .faq button{grid-template-columns:1fr auto;gap:16px;}
   .faq button .fn{display:none;}
   .strip .it{gap:16px;}.strip .it::after{margin-left:16px;}
+}
+
+/* ── Market run city links ── */
+.market-run a{color:inherit;transition:color .2s;}
+.market-run a:hover{color:var(--bronze);}
+
+/* ── Sticky mobile call bar (injected by app.js) ── */
+.callbar{display:none;}
+@media(max-width:1000px){
+  .callbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;gap:1px;box-shadow:0 -6px 24px rgba(28,25,21,.16);padding-bottom:env(safe-area-inset-bottom);}
+  .callbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 12px;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;}
+  .cb-call{background:var(--ink);color:var(--paper);}
+  .cb-call:active{background:var(--charcoal);}
+  .cb-quote{background:var(--bronze);color:var(--white);}
+  .cb-quote:active{background:var(--bronze-bright);}
+  .cb-ico{font-size:15px;line-height:1;}
+  body{padding-bottom:calc(52px + env(safe-area-inset-bottom));}
 }

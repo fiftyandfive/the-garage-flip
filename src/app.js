@@ -1,5 +1,30 @@
 // The Garage Flip — shared site behaviour (guarded for pages that omit a section)
 (function(){
+  // ── Analytics (GA4) ────────────────────────────────────────────────────────
+  // Paste your GA4 Measurement ID below (looks like "G-XXXXXXXXXX").
+  // Find it in Google Analytics → Admin → Data Streams → your web stream.
+  // Until a real ID is set, tracking stays off (no broken requests).
+  var GA_MEASUREMENT_ID = 'G-RY0HBH06LR';
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  window.gtag = window.gtag || gtag;
+
+  var gaEnabled = /^G-[A-Z0-9]{6,}$/.test(GA_MEASUREMENT_ID) && GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX';
+  if (gaEnabled) {
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID);
+  }
+  // Fire a conversion/event only when analytics is live (no-op otherwise).
+  function track(name, params){ if (gaEnabled) gtag('event', name, params || {}); }
+
+  var pageLabel = (document.body && document.body.getAttribute('data-screen-label')) || 'Site';
+
+  // ── Nav scroll state ────────────────────────────────────────────────────────
   var nav = document.getElementById('nav');
   if (nav) {
     var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
@@ -7,6 +32,7 @@
     onScroll();
   }
 
+  // ── Mobile menu ─────────────────────────────────────────────────────────────
   var mm = document.getElementById('mm');
   var navToggle = document.getElementById('navToggle');
   if (mm && navToggle) {
@@ -16,6 +42,7 @@
     mm.querySelectorAll('a').forEach(function(a){ a.onclick = function(){ mm.classList.remove('open'); }; });
   }
 
+  // ── FAQ accordion ───────────────────────────────────────────────────────────
   document.querySelectorAll('.faq-list .faq button').forEach(function(btn){
     btn.onclick = function(){
       var item = btn.parentElement;
@@ -29,6 +56,28 @@
     };
   });
 
+  // ── Sticky mobile call bar (injected site-wide) ─────────────────────────────
+  if (!document.querySelector('.callbar')) {
+    var bar = document.createElement('div');
+    bar.className = 'callbar';
+    bar.innerHTML =
+      '<a href="tel:+14077356450" class="cb-call" data-cb="call">' +
+        '<span class="cb-ico" aria-hidden="true">&#9742;</span> Call' +
+      '</a>' +
+      '<a href="#book" class="cb-quote" data-cb="quote">Free quote</a>';
+    document.body.appendChild(bar);
+  }
+
+  // ── Click-to-call / text conversion tracking (delegated) ────────────────────
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('tel:') === 0) track('click_to_call', { page_location_label: pageLabel });
+    else if (href.indexOf('sms:') === 0) track('click_to_text', { page_location_label: pageLabel });
+  }, true);
+
+  // ── Intake form ─────────────────────────────────────────────────────────────
   var form = document.getElementById('form');
   if (form) {
     form.addEventListener('submit', function(e){
@@ -43,7 +92,7 @@
           name: document.getElementById('name').value.trim(),
           phone: document.getElementById('phone').value.trim(),
           zip: document.getElementById('zip').value.trim(),
-          _subject: 'New lead — The Garage Flip (' + document.body.getAttribute('data-screen-label') + ')'
+          _subject: 'New lead — The Garage Flip (' + pageLabel + ')'
         };
         var size = document.getElementById('size');
         var timeline = document.getElementById('timeline');
@@ -52,13 +101,16 @@
         if (timeline && timeline.value) data.timeline = timeline.value;
         if (service && service.value) data.service = service.value;
         data._replyto = 'hello@thegarageflip.com';
-        data.page = document.body.getAttribute('data-screen-label');
+        data.page = pageLabel;
 
         fetch('https://formspree.io/f/xkokwnov', {
           method: 'POST',
           headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
+
+        // GA4 conversion — mark "generate_lead" as a Key Event in GA to count sign-ups.
+        track('generate_lead', { page_location_label: pageLabel, service: data.service || 'unspecified' });
 
         form.style.display = 'none';
         var done = document.getElementById('done');
@@ -71,6 +123,7 @@
     });
   }
 
+  // ── Scroll reveal ───────────────────────────────────────────────────────────
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
   }, {threshold:0.1, rootMargin:'0px 0px -6% 0px'});
